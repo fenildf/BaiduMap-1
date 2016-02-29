@@ -71,7 +71,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	 * 发起云存储请求
 	 */
 	private void storage() {
-		LBSStorage.request(getRequestParams(),mHandler);
+		LBSStorage.request(getRequestParams(), mHandler);
 	}
 
 	/**
@@ -85,10 +85,12 @@ public class UpDataActivity extends Activity implements OnClickListener {
 			myCentureLatitude = Double.toString(PositionEntity.latitue);
 			myCentureLongitude = Double.toString(PositionEntity.longitude);
 			myCentureAddress = PositionEntity.address;
-			
-			Log.e(mTAG, myCentureLatitude+"-"+myCentureLongitude+"-"+myCentureAddress);
-			
-			String titleString = TitleEdit.getMyRightTextView().getText().toString();
+
+			Log.e(mTAG, myCentureLatitude + "-" + myCentureLongitude + "-"
+					+ myCentureAddress);
+
+			String titleString = TitleEdit.getMyRightTextView().getText()
+					.toString();
 			map.put("latitude", myCentureLatitude);
 			map.put("longitude", myCentureLongitude);
 			map.put("address", myCentureAddress);
@@ -132,16 +134,15 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		List<Infos> list = infos.getReturnInfos();
 		try {
 			if (json.getInt("status") != 0) {
-				Log.e(mTAG, "POST上传错误"+"status="+json.getInt("status") + "message="+json.getString("message"));
+				Log.e(mTAG, "POST上传错误" + "status=" + json.getInt("status")
+						+ "message=" + json.getString("message"));
 			} else {
-				if (json.getString("message") == "成功") {
-					Infos info = new Infos();
-					info.setReturnid(json.getString("id"));
-					list.add(info);
-					Toast.makeText(this, "提交成功",Toast.LENGTH_SHORT).show();
-				} else {
-					return;
-				}
+				Log.e(mTAG, "status=" + json.getInt("status") + "message="
+						+ json.getString("message"));
+				Infos info = new Infos();
+				info.setReturnid(json.getString("id"));
+				list.add(info);
+				Toast.makeText(this, "提交成功", Toast.LENGTH_SHORT).show();
 			}
 
 		} catch (Exception e) {
@@ -163,10 +164,16 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.myupload_data_btn:
-			if(TitleEdit.getMyRightTextView().getText().toString() == null){
-				Toast.makeText(this, "主题为空",Toast.LENGTH_SHORT).show();
-			}else{
-				storage();
+			if (PositionEntity.latitue != 0 && PositionEntity.longitude != 0) {
+				if (TitleEdit.getMyRightTextView().getText().length() >= 1) {
+					Log.e(mTAG, "主题不为空");
+					storage();
+				} else {
+					Toast.makeText(this, "请输入主题", Toast.LENGTH_SHORT).show();
+				}
+
+			} else {
+				Toast.makeText(this, "请确定位置", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.myPosition:
@@ -183,19 +190,20 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		}
 	}
 
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		super.onActivityResult(requestCode, resultCode, data);
-//		try {
-//			Bundle MarsBuddle = data.getExtras();
-//			myCentureLatitude = MarsBuddle.getDouble("Latitude");
-//			myCentureLongitude = MarsBuddle.getDouble("Longitude");
-//			Log.e(mTAG,
-//					Double.toString(myCentureLatitude) + "-"
-//							+ Double.toString(myCentureLongitude));
-//			
-//		} catch (Exception e) {
-//			Log.e(mTAG, "返回数据为空");
-//		}
-//	}
+	// @Override
+	// protected void onActivityResult(int requestCode, int resultCode, Intent
+	// data) {
+	// super.onActivityResult(requestCode, resultCode, data);
+	// try {
+	// Bundle MarsBuddle = data.getExtras();
+	// myCentureLatitude = MarsBuddle.getDouble("Latitude");
+	// myCentureLongitude = MarsBuddle.getDouble("Longitude");
+	// Log.e(mTAG,
+	// Double.toString(myCentureLatitude) + "-"
+	// + Double.toString(myCentureLongitude));
+	//
+	// } catch (Exception e) {
+	// Log.e(mTAG, "返回数据为空");
+	// }
+	// }
 }

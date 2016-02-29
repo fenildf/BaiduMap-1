@@ -367,8 +367,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			arg0.putSerializable("info", info);
 			marker.setExtraInfo(arg0);
 		}
-		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latlng);
-		mBaiduMap.animateMapStatus(msu);
+//		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latlng);
+//		mBaiduMap.animateMapStatus(msu);
 
 	}
 

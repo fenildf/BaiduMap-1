@@ -25,6 +25,8 @@ public class LBSSearch {
 	private static final String SEARCH_URI_LOCAL = "http://api.map.baidu.com/geosearch/v3/local?";
 	// 云检索公钥
 	private static String ak = "W9aWyT6yAaILUOur0j8BjOgl";
+	//每页显示数量
+	private static String page_size = "50";
 	private static String geotable_id = "133284";
 
 	private static int retry = 1;
@@ -54,7 +56,8 @@ public class LBSSearch {
 						String requestURL = "";
 						requestURL = SEARCH_URI_LOCAL;
 						requestURL = requestURL + "&" + "ak=" + ak
-								+ "&geotable_id=" + geotable_id;
+								+ "&geotable_id=" + geotable_id 
+								+ "page_size=" + page_size;
 
 						Iterator iter = filterParams.entrySet().iterator();
 
