@@ -359,7 +359,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			latlng = new LatLng(info.getLatitude(), info.getLongitude());
 
 			MarkerOptions options = new MarkerOptions().position(latlng)
-					.icon(bitmap).zIndex(9).draggable(true);
+					.icon(bitmap)
+					.zIndex(9)
+					.draggable(false);
 
 			options.animateType(MarkerAnimateType.grow);
 			marker = (Marker) (mBaiduMap.addOverlay(options));

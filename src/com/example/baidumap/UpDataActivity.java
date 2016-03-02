@@ -136,6 +136,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 			if (json.getInt("status") != 0) {
 				Log.e(mTAG, "POST上传错误" + "status=" + json.getInt("status")
 						+ "message=" + json.getString("message"));
+				Toast.makeText(this, "提交失败", Toast.LENGTH_SHORT).show();
 			} else {
 				Log.e(mTAG, "status=" + json.getInt("status") + "message="
 						+ json.getString("message"));
@@ -143,6 +144,12 @@ public class UpDataActivity extends Activity implements OnClickListener {
 				info.setReturnid(json.getString("id"));
 				list.add(info);
 				Toast.makeText(this, "提交成功", Toast.LENGTH_SHORT).show();
+				
+				PositionEntity.address = null;
+				PositionEntity.latitue = 0;
+				PositionEntity.longitude = 0;
+				TitleEdit.getMyRightTextView().setText("");
+				PositionBtn.setLeftText("请确定当前位置");
 			}
 
 		} catch (Exception e) {
@@ -154,7 +161,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	 * 初始化页面
 	 */
 	private void initData() {
-		PositionBtn.setLeftText("确定当前位置");
+		PositionBtn.setLeftText("请确定当前位置");
 		PositionBtn.setRightBitMap(R.drawable.image_more_subitem_arrow);
 		TitleEdit.setLeftText("主题:");
 		upload_data_btn.setText("提交");
@@ -171,7 +178,6 @@ public class UpDataActivity extends Activity implements OnClickListener {
 				} else {
 					Toast.makeText(this, "请输入主题", Toast.LENGTH_SHORT).show();
 				}
-
 			} else {
 				Toast.makeText(this, "请确定位置", Toast.LENGTH_SHORT).show();
 			}
@@ -206,4 +212,33 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	// Log.e(mTAG, "返回数据为空");
 	// }
 	// }
+	
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	protected void onResume() {
+		super.onRestart();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(PositionEntity.latitue != 0 || PositionEntity.longitude != 0){
+			PositionBtn.getMyLeftTextView().setTextColor(0xFFFFB90F);
+			PositionBtn.setLeftText("已确定位置");
+		}
+	}
+
+	protected void onPause() {
+		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		PositionEntity.address = null;
+		PositionEntity.latitue = 0;
+		PositionEntity.longitude = 0;
+	}
 }

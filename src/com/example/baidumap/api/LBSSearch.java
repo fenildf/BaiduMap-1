@@ -57,7 +57,7 @@ public class LBSSearch {
 						requestURL = SEARCH_URI_LOCAL;
 						requestURL = requestURL + "&" + "ak=" + ak
 								+ "&geotable_id=" + geotable_id 
-								+ "page_size=" + page_size;
+								+ "&page_size=" + page_size;
 
 						Iterator iter = filterParams.entrySet().iterator();
 
