@@ -14,11 +14,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         
-        <activity android:name="com.example.baidumap.UpDataActivity"></activity>
-        <activity android:name="com.example.baidumap.UpDataLocationActivity"></activity>
+        <activity android:name="com.example.baidumap.activity.UpDataActivity"></activity>
+        <activity android:name="com.example.baidumap.activity.UpDataLocationActivity"></activity>
         
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

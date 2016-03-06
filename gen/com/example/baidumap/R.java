@@ -30,7 +30,7 @@ public final class R {
         public static final int icon_marker=0x7f020005;
         public static final int icon_marker_location=0x7f020006;
         public static final int image_more_subitem_arrow=0x7f020007;
-        public static final int location_tips=0x7f020008;
+        public static final int location_marker=0x7f020008;
         public static final int main_icon_compass=0x7f020009;
         public static final int main_icon_follow=0x7f02000a;
         public static final int main_icon_location=0x7f02000b;
