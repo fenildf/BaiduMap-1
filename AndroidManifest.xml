@@ -16,15 +16,18 @@
         
         <activity android:name="com.example.baidumap.activity.UpDataActivity"></activity>
         <activity android:name="com.example.baidumap.activity.UpDataLocationActivity"></activity>
-        
-        <activity
-            android:name=".activity.MainActivity"
-            android:label="@string/app_name" >
+        <activity android:name="com.example.baidumap.activity.AppStart">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name" >
+            
         </activity>
 
         <meta-data
