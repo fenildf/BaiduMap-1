@@ -196,23 +196,6 @@ public class MainActivity extends Activity implements OnClickListener {
 				mBaiduMap.hideInfoWindow();
 			}
 		});
-		
-//		/**
-//		 * 地图点击事件
-//		 */
-//		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
-//
-//			@Override
-//			public boolean onMapPoiClick(MapPoi arg0) {
-//				return false;
-//			}
-//
-//			@Override
-//			public void onMapClick(LatLng arg0) {
-//				mMarkerLayout.setVisibility(View.GONE);
-//				mBaiduMap.hideInfoWindow();
-//			}
-//		});
 
 	}
 
@@ -593,7 +576,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		mToast.show();
 		mToast.setGravity(Gravity.CENTER, 0, 0);
-}
+    }
 
 	protected void onDestroy() {
 		super.onDestroy();
