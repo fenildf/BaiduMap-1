@@ -1,4 +1,4 @@
-package com.example.baidumap;
+package com.example.baidumap.activity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.baidu.mapapi.model.LatLng;
+import com.example.baidumap.R;
 import com.example.baidumap.api.LBSSearch;
 import com.example.baidumap.api.LBSStorage;
+import com.example.baidumap.entity.Infos;
+import com.example.baidumap.entity.PositionEntity;
 import com.example.baidumap.view.SettingItemViewBtn;
 import com.example.baidumap.view.SettingItemViewEdit;
 
@@ -21,6 +24,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -35,6 +39,8 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	SettingItemViewEdit TitleEdit;
 	Button upload_data_btn;
 	ImageView updata_back;
+	
+	Toast mToast;
 
 	PositionEntity entity = new PositionEntity();
 	private String myCentureLatitude;
@@ -44,7 +50,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// Òş²Ø±êÌâÀ¸
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// éšè—æ ‡é¢˜æ 
 		setContentView(R.layout.activity_updata);
 
 		findView();
@@ -52,7 +58,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ÕÒ¿Ø¼ş
+	 * æ‰¾æ§ä»¶
 	 */
 	private void findView() {
 		PositionBtn = (SettingItemViewBtn) findViewById(R.id.myPosition);
@@ -68,14 +74,14 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ·¢ÆğÔÆ´æ´¢ÇëÇó
+	 * å‘èµ·äº‘å­˜å‚¨è¯·æ±‚
 	 */
 	private void storage() {
 		LBSStorage.request(getRequestParams(), mHandler);
 	}
 
 	/**
-	 * Éè¶¨ÔÆ¼ìË÷²ÎÊı
+	 * è®¾å®šäº‘æ£€ç´¢å‚æ•°
 	 * 
 	 * @return
 	 */
@@ -109,7 +115,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 			switch (msg.what) {
 			case 3:
 				if (msg.obj == null) {
-					Log.e(mTAG, "msg½ÓÊÕÊı¾İÎª¿Õ");
+					Log.e(mTAG, "msgæ¥æ”¶æ•°æ®ä¸ºç©º");
 				} else {
 					String result = msg.obj.toString();
 					try {
@@ -125,7 +131,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	};
 
 	/**
-	 * ½âÎö·µ»ØÊı¾İ
+	 * è§£æè¿”å›æ•°æ®
 	 * 
 	 * @param json
 	 */
@@ -134,37 +140,38 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		List<Infos> list = infos.getReturnInfos();
 		try {
 			if (json.getInt("status") != 0) {
-				Log.e(mTAG, "POSTÉÏ´«´íÎó" + "status=" + json.getInt("status")
+				Log.e(mTAG, "POSTä¸Šä¼ é”™è¯¯" + "status=" + json.getInt("status")
 						+ "message=" + json.getString("message"));
-				Toast.makeText(this, "Ìá½»Ê§°Ü", Toast.LENGTH_SHORT).show();
+				showToast("æäº¤å¤±è´¥");
 			} else {
 				Log.e(mTAG, "status=" + json.getInt("status") + "message="
 						+ json.getString("message"));
 				Infos info = new Infos();
 				info.setReturnid(json.getString("id"));
 				list.add(info);
-				Toast.makeText(this, "Ìá½»³É¹¦", Toast.LENGTH_SHORT).show();
+				showToast("æäº¤æˆåŠŸ");
 				
 				PositionEntity.address = null;
 				PositionEntity.latitue = 0;
 				PositionEntity.longitude = 0;
 				TitleEdit.getMyRightTextView().setText("");
-				PositionBtn.setLeftText("ÇëÈ·¶¨µ±Ç°Î»ÖÃ");
+				PositionBtn.setLeftText("è¯·ç¡®å®šå½“å‰ä½ç½®");
+				PositionBtn.getMyLeftTextView().setTextColor(0xFFb2b2b2);
 			}
 
 		} catch (Exception e) {
-			Log.e(mTAG, "parser´íÎó£¡");
+			Log.e(mTAG, "parseré”™è¯¯ï¼");
 		}
 	}
 
 	/**
-	 * ³õÊ¼»¯Ò³Ãæ
+	 * åˆå§‹åŒ–é¡µé¢
 	 */
 	private void initData() {
-		PositionBtn.setLeftText("ÇëÈ·¶¨µ±Ç°Î»ÖÃ");
+		PositionBtn.setLeftText("è¯·ç¡®å®šå½“å‰ä½ç½®");
 		PositionBtn.setRightBitMap(R.drawable.image_more_subitem_arrow);
-		TitleEdit.setLeftText("Ö÷Ìâ:");
-		upload_data_btn.setText("Ìá½»");
+		TitleEdit.setLeftText("ä¸»é¢˜:");
+		upload_data_btn.setText("æäº¤");
 	}
 
 	@Override
@@ -173,13 +180,13 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		case R.id.myupload_data_btn:
 			if (PositionEntity.latitue != 0 && PositionEntity.longitude != 0) {
 				if (TitleEdit.getMyRightTextView().getText().length() >= 1) {
-					Log.e(mTAG, "Ö÷Ìâ²»Îª¿Õ");
+					Log.e(mTAG, "ä¸»é¢˜ä¸ä¸ºç©º");
 					storage();
 				} else {
-					Toast.makeText(this, "ÇëÊäÈëÖ÷Ìâ", Toast.LENGTH_SHORT).show();
+					showToast("è¯·è¾“å…¥ä¸»é¢˜");
 				}
 			} else {
-				Toast.makeText(this, "ÇëÈ·¶¨Î»ÖÃ", Toast.LENGTH_SHORT).show();
+				showToast("è¯·ç¡®å®šä½ç½®");
 			}
 			break;
 		case R.id.myPosition:
@@ -209,9 +216,21 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	// + Double.toString(myCentureLongitude));
 	//
 	// } catch (Exception e) {
-	// Log.e(mTAG, "·µ»ØÊı¾İÎª¿Õ");
+	// Log.e(mTAG, "è¿”å›æ•°æ®ä¸ºç©º");
 	// }
 	// }
+	
+	private void showToast(String text){
+		if(mToast == null){
+			mToast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+		}else {
+			mToast.setText(text);
+			mToast.setDuration(Toast.LENGTH_SHORT);
+		}
+		mToast.show();
+		mToast.setGravity(Gravity.CENTER, 0, 0);
+    }
+	
 	
 	protected void onDestroy() {
 		super.onDestroy();
@@ -226,7 +245,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		super.onStart();
 		if(PositionEntity.latitue != 0 || PositionEntity.longitude != 0){
 			PositionBtn.getMyLeftTextView().setTextColor(0xFFFFB90F);
-			PositionBtn.setLeftText("ÒÑÈ·¶¨Î»ÖÃ");
+			PositionBtn.setLeftText("å·²ç¡®å®šä½ç½®");
 		}
 	}
 
