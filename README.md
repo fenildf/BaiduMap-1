@@ -1,4 +1,4 @@
-BaiduMap基于百度地图API LBS云  Android开发
+BaiduMap LBS云
 ====================
 >地图SDK
 定位SDK  
