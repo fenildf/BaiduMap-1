@@ -1,17 +1,5 @@
 package com.example.baidumap.activity;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -39,13 +29,12 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
-import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -61,14 +50,28 @@ import com.example.baidumap.activity.MyOrientationListener.OnOrientationListener
 import com.example.baidumap.api.LBSSearch;
 import com.example.baidumap.entity.Infos;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+
 public class MainActivity extends Activity implements OnClickListener {
 
 	public MapView mMapView = null;
 	public BaiduMap mBaiduMap = null;
 
-	// ÉÏ´Î°´ÏÂ·µ»Ø¼üµÄÏµÍ³Ê±¼ä
+	private Toast mToast;
+
+	// ä¸Šæ¬¡æŒ‰ä¸‹è¿”å›é”®çš„ç³»ç»Ÿæ—¶é—´
 	private long lastBackTime = 0;
-	// µ±Ç°°´ÏÂ·µ»Ø¼üµÄÏµÍ³Ê±¼ä
+	// å½“å‰æŒ‰ä¸‹è¿”å›é”®çš„ç³»ç»Ÿæ—¶é—´
 	private long currentBackTime = 0;
 
 	private Bitmap mBitmap;
@@ -84,22 +87,22 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Button btn_uploaddata;
 	private ImageView img_myLocation;
 
-	// ¶¨Î»Ïà¹Ø
-	public BDLocation currlocation = null; // ´æ´¢µ±Ç°¶¨Î»ĞÅÏ¢
+	// å®šä½ç›¸å…³
+	public BDLocation currlocation = null; // å­˜å‚¨å½“å‰å®šä½ä¿¡æ¯
 	public LocationClient mLocationClient = null;
 	public MyLocationListener listener = new MyLocationListener();
 	private boolean isFirstIn = true;
 	public double mLatitude;
 	public double mLongitude;
-	// Ä£Ê½ÇĞ»»
+	// æ¨¡å¼åˆ‡æ¢
 	private LocationMode mLocationMode;
 
-	// ×Ô¶¨Òå¶¨Î»Í¼±ê
+	// è‡ªå®šä¹‰å®šä½å›¾æ ‡
 	private BitmapDescriptor mIconLocation;
 	private MyOrientationListener myOrientationListener;
 	private float mCurrentX;
 
-	// ¸²¸ÇÎïÏà¹Ø
+	// è¦†ç›–ç‰©ç›¸å…³
 	private BitmapDescriptor bitmap;
 	private Marker marker;
 	private RelativeLayout mMarkerLayout;
@@ -107,9 +110,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// Òş²Ø±êÌâÀ¸
-		// ÔÚÊ¹ÓÃSDK¸÷×é¼şÖ®Ç°³õÊ¼»¯contextĞÅÏ¢£¬´«ÈëApplicationContext
-		// ×¢Òâ¸Ã·½·¨ÒªÔÙsetContentView·½·¨Ö®Ç°ÊµÏÖ
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// éšè—æ ‡é¢˜æ 
+		// åœ¨ä½¿ç”¨SDKå„ç»„ä»¶ä¹‹å‰åˆå§‹åŒ–contextä¿¡æ¯ï¼Œä¼ å…¥ApplicationContext
+		// æ³¨æ„è¯¥æ–¹æ³•è¦å†setContentViewæ–¹æ³•ä¹‹å‰å®ç°
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 
@@ -123,7 +126,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		search();
 
 		/**
-		 * ±ê¼Çµã»÷ÊÂ¼ş
+		 * æ ‡è®°ç‚¹å‡»äº‹ä»¶
 		 */
 		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
@@ -138,7 +141,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				zan = (TextView) mMarkerLayout.findViewById(R.id.id_info_zan);
 				name = (TextView) mMarkerLayout.findViewById(R.id.id_info_name);
 
-				// ½«±ê¼ÇµãÒÆÖÁÖĞ¼ä
+				// å°†æ ‡è®°ç‚¹ç§»è‡³ä¸­é—´
 				LatLng latlng = new LatLng(info.getLatitude(), info
 						.getLongitude());
 				MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latlng);
@@ -180,17 +183,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		});
 
 		/**
-		 * µØÍ¼µã»÷ÊÂ¼ş
+		 * åœ°å›¾è§¦æ‘¸äº‹ä»¶
 		 */
-		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
+		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
 
 			@Override
-			public boolean onMapPoiClick(MapPoi arg0) {
-				return false;
-			}
-
-			@Override
-			public void onMapClick(LatLng arg0) {
+			public void onTouch(MotionEvent arg0) {
 				mMarkerLayout.setVisibility(View.GONE);
 				mBaiduMap.hideInfoWindow();
 			}
@@ -199,7 +197,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ÕÒ¿Ø¼ş
+	 * æ‰¾æ§ä»¶
 	 */
 	private void findViewById() {
 		btn_overlays = (Button) findViewById(R.id.id_overlays);
@@ -215,8 +213,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ¶ÁÈ¡ÍøÂçÍ¼Æ¬
-	 * 
+	 * è¯»å–ç½‘ç»œå›¾ç‰‡
 	 * @param imgurl
 	 * @return
 	 */
@@ -237,7 +234,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		return bitmap;
 	}
 
-	// Ïß³Ì´¦ÀíÍøÂçÍ¼Æ¬ÏÂÔØ
+	// çº¿ç¨‹å¤„ç†ç½‘ç»œå›¾ç‰‡ä¸‹è½½
 	Runnable runnable = new Runnable() {
 
 		@Override
@@ -250,35 +247,35 @@ public class MainActivity extends Activity implements OnClickListener {
 	};
 
 	/**
-	 * ·µ»ØÊı¾İ
+	 * è¿”å›æ•°æ®
 	 */
 	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 0:
-				if (msg.obj == null) {
-					Log.e("bb", "½ÓÊÕÊı¾İÎª¿Õ");
-				} else {
-					String result = msg.obj.toString();
-					try {
-						JSONObject json = new JSONObject(result);
-						parser(json);
-					} catch (JSONException e) {
-						e.printStackTrace();
+				case 0:
+					if (msg.obj == null) {
+						Log.e("main", "æ¥æ”¶æ•°æ®ä¸ºç©º");
+					} else {
+						String result = msg.obj.toString();
+						try {
+							JSONObject json = new JSONObject(result);
+							parser(json);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-				break;
-			case 1:
-				image.setImageBitmap(mBitmap);
-				break;
+					break;
+				case 1:
+					image.setImageBitmap(mBitmap);
+					break;
 			}
 		}
 	};
 
 	/**
-	 * ½âÎö·µ»ØÊı¾İ
-	 * 
+	 * è§£æè¿”å›æ•°æ®
+	 *
 	 * @param json
 	 */
 	protected void parser(JSONObject json) {
@@ -287,7 +284,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		try {
 			JSONArray jsonArray = json.getJSONArray("contents");
 			if (jsonArray != null && jsonArray.length() <= 0) {
-				Toast.makeText(this, "Ã»ÓĞ·ûºÏÒªÇóµÄÊı¾İ", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "æ²¡æœ‰ç¬¦åˆè¦æ±‚çš„æ•°æ®", Toast.LENGTH_SHORT).show();
 			} else {
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject jsonObject2 = (JSONObject) jsonArray.opt(i);
@@ -295,8 +292,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 					info.setName(jsonObject2.getString("title"));
 					info.setAddr(jsonObject2.getString("address"));
-					info.setDistance("¾àÀë" + jsonObject2.getString("distance")
-							+ "Ã×");
+					info.setDistance("è·ç¦»" + jsonObject2.getString("distance")
+							+ "ç±³");
 
 					JSONArray locArray = jsonObject2.getJSONArray("location");
 					double longitude = locArray.getDouble(0);
@@ -312,7 +309,7 @@ public class MainActivity extends Activity implements OnClickListener {
 								currlocation.getLongitude(), latitude,
 								longitude, results);
 					}
-					info.setDistance("¾àÀë" + (int)results[0] + "Ã×");
+					info.setDistance("è·ç¦»" + (int)results[0] + "ç±³");
 
 					info.setImgurl(jsonObject2.getString("image"));
 					info.setZan(jsonObject2.getInt("zan"));
@@ -321,12 +318,12 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 			}
 		} catch (Exception e) {
-			Log.e("mainactivity", "parser´íÎó£¡");
+			Log.e("main", "parserè§£æé”™è¯¯ï¼");
 		}
 	}
 
 	/**
-	 * ·¢ÆğÔÆ¼ìË÷
+	 * å‘èµ·äº‘æ£€ç´¢
 	 */
 	private void search() {
 		Infos infos = new Infos();
@@ -335,8 +332,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Éè¶¨ÔÆ¼ìË÷²ÎÊı
-	 * 
+	 * è®¾å®šäº‘æ£€ç´¢å‚æ•°
+	 *
 	 * @return
 	 */
 	private HashMap<String, String> getRequestParams() {
@@ -355,15 +352,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ³õÊ¼»¯¸²¸ÇÎï
+	 * åˆå§‹åŒ–è¦†ç›–ç‰©
 	 */
 	private void initMarker() {
 		bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker);
 	}
 
 	/**
-	 * Ìí¼Ó¸²¸ÇÎï
-	 * 
+	 * æ·»åŠ è¦†ç›–ç‰©
+	 *
 	 * @param infos
 	 */
 	private void addOverlays(List<Infos> infos) {
@@ -372,68 +369,68 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		for (Infos info : infos) {
 			latlng = new LatLng(info.getLatitude(), info.getLongitude());
-
+			Log.e("Main", latlng.toString());
 			MarkerOptions options = new MarkerOptions().position(latlng)
 					.icon(bitmap).zIndex(9).draggable(false);
 
 			options.animateType(MarkerAnimateType.grow);
 			marker = (Marker) (mBaiduMap.addOverlay(options));
-			Bundle arg0 = new Bundle();
-			arg0.putSerializable("info", info);
-			marker.setExtraInfo(arg0);
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("info", info);
+			marker.setExtraInfo(bundle);
+
 		}
 		// MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latlng);
 		// mBaiduMap.animateMapStatus(msu);
-
 	}
 
 	/**
-	 * ³õÊ¼»¯µØÍ¼
+	 * åˆå§‹åŒ–åœ°å›¾
 	 */
 	private void initView() {
 		mMapView = (MapView) findViewById(R.id.bmapView);
-		mBaiduMap = mMapView.getMap();// ³õÊ¼»¯°Ù¶ÈµØÍ¼ ²ÅÄÜ¶ÔµØÍ¼²Ù×÷
-		mMapView.showScaleControl(false);// ²»ÏÔÊ¾µØÍ¼ÉÏ±ÈÀı³ß
-		mMapView.showZoomControls(false);// ²»ÏÔÊ¾µØÍ¼Ëõ·Å¿Ø¼ş£¨°´Å¥¿ØÖÆÀ¸£©
-		// ³õÊ¼»¯±ÈÀı³ßµ½100Ã×
+		mBaiduMap = mMapView.getMap();// åˆå§‹åŒ–ç™¾åº¦åœ°å›¾ æ‰èƒ½å¯¹åœ°å›¾æ“ä½œ
+		mMapView.showScaleControl(false);// ä¸æ˜¾ç¤ºåœ°å›¾ä¸Šæ¯”ä¾‹å°º
+		mMapView.showZoomControls(false);// ä¸æ˜¾ç¤ºåœ°å›¾ç¼©æ”¾æ§ä»¶ï¼ˆæŒ‰é’®æ§åˆ¶æ ï¼‰
+		// åˆå§‹åŒ–æ¯”ä¾‹å°ºåˆ°100ç±³
 		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(17.0f);
 		mBaiduMap.setMapStatus(msu);
 
 	}
 
 	/**
-	 * ³õÊ¼»¯¶¨Î»
+	 * åˆå§‹åŒ–å®šä½
 	 */
 	private void initLocation() {
 
-		// ÊµÀı»¯°Ù¶ÈµØÍ¼¶¨Î»ºËĞÄÀà
+		// å®ä¾‹åŒ–ç™¾åº¦åœ°å›¾å®šä½æ ¸å¿ƒç±»
 		mLocationClient = new LocationClient(this);
 		mLocationClient.registerLocationListener(listener);
 
 		mLocationMode = LocationMode.NORMAL;
-		// µØÍ¼×´Ì¬°´Å¥
+		// åœ°å›¾çŠ¶æ€æŒ‰é’®
 		img_myLocation = (ImageView) findViewById(R.id.id_mylocation_img);
 		img_myLocation.setImageResource(R.drawable.main_icon_location);
 
-		// ÉèÖÃµØÍ¼²ÎÊı
+		// è®¾ç½®åœ°å›¾å‚æ•°
 		LocationClientOption option = new LocationClientOption();
-		// ÉèÖÃ×ø±êÏµ
+		// è®¾ç½®åæ ‡ç³»
 		option.setCoorType("bd09ll");
-		// ·µ»ØÎ»ÖÃĞÅÏ¢
+		// è¿”å›ä½ç½®ä¿¡æ¯
 		option.setIsNeedAddress(true);
-		// ÆôÓÃ¸ß¾«¶È¶¨Î»
+		// å¯ç”¨é«˜ç²¾åº¦å®šä½
 		option.setOpenGps(true);
-		// ÉèÖÃË¢ĞÂ¼ä¸ô1Ãë
+		// è®¾ç½®åˆ·æ–°é—´éš”1ç§’
 		option.setScanSpan(1000);
 		mLocationClient.setLocOption(option);
 
-		// Æô¶¯µØÍ¼¶¨Î»
+		// å¯åŠ¨åœ°å›¾å®šä½
 		if (!mLocationClient.isStarted()) {
 			mLocationClient.stop();
 		}
 		mLocationClient.start();
 
-		// ³õÊ¼»¯Í¼±ê
+		// åˆå§‹åŒ–å›¾æ ‡
 		mIconLocation = BitmapDescriptorFactory
 				.fromResource(R.drawable.navi_map_gps_locked);
 
@@ -449,10 +446,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ¶¨Î»¼àÌıÀà
-	 * 
+	 * å®šä½ç›‘å¬ç±»
 	 * @author Administrator
-	 * 
 	 */
 	public class MyLocationListener implements BDLocationListener {
 
@@ -463,28 +458,28 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 			currlocation = location;
 
-			// ·â×°Êı¾İ
+			// å°è£…æ•°æ®
 			MyLocationData data = new MyLocationData.Builder()//
 					.accuracy(location.getRadius())//
 					.direction(mCurrentX)//
 					.latitude(location.getLatitude())//
 					.longitude(location.getLongitude())//
 					.build();
-			// °ó¶¨µØÍ¼Êı¾İ
+			// ç»‘å®šåœ°å›¾æ•°æ®
 			mBaiduMap.setMyLocationData(data);
 
-			// ÉèÖÃ×Ô¶¨ÒåÍ¼±ê
+			// è®¾ç½®è‡ªå®šä¹‰å›¾æ ‡
 			MyLocationConfiguration config = new MyLocationConfiguration(
 					mLocationMode, true, mIconLocation);
 			mBaiduMap.setMyLocationConfigeration(config);
 
-			// ¸üĞÂ¾­Î³¶È
+			// æ›´æ–°ç»çº¬åº¦
 			mLatitude = location.getLatitude();
 			mLongitude = location.getLongitude();
 
-			// µÚÒ»´Î´ò¿ª
+			// ç¬¬ä¸€æ¬¡æ‰“å¼€
 			if (isFirstIn) {
-				// »ñÈ¡×ø±êµã
+				// è·å–åæ ‡ç‚¹
 				LatLng ll = new LatLng(location.getLatitude(),
 						location.getLongitude());
 				MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
@@ -494,50 +489,48 @@ public class MainActivity extends Activity implements OnClickListener {
 				// Toast.makeText(context, location.getAddrStr(),
 				// Toast.LENGTH_SHORT).show();
 			}
-
 		}
-
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		// ÎÒµÄÎ»ÖÃ°´Å¥
-		case R.id.id_mylocation:
-			switch (mLocationMode) {
-			case NORMAL:
-				mLocationMode = LocationMode.FOLLOWING;
-				img_myLocation.setImageResource(R.drawable.main_icon_follow);
+			// æˆ‘çš„ä½ç½®æŒ‰é’®
+			case R.id.id_mylocation:
+				switch (mLocationMode) {
+					case NORMAL:
+						mLocationMode = LocationMode.FOLLOWING;
+						img_myLocation.setImageResource(R.drawable.main_icon_follow);
+						break;
+					case FOLLOWING:
+						mLocationMode = LocationMode.COMPASS;
+						img_myLocation.setImageResource(R.drawable.main_icon_compass);
+						mIconLocation = BitmapDescriptorFactory
+								.fromResource(R.drawable.navi_map_gps_locked_compass);
+						break;
+					case COMPASS:
+						mLocationMode = LocationMode.NORMAL;
+						img_myLocation.setImageResource(R.drawable.main_icon_location);
+						mIconLocation = BitmapDescriptorFactory
+								.fromResource(R.drawable.navi_map_gps_locked);
+						break;
+				}
 				break;
-			case FOLLOWING:
-				mLocationMode = LocationMode.COMPASS;
-				img_myLocation.setImageResource(R.drawable.main_icon_compass);
-				mIconLocation = BitmapDescriptorFactory
-						.fromResource(R.drawable.navi_map_gps_locked_compass);
+			// è¦†ç›–ç‰©æŒ‰é’®
+			case R.id.id_overlays:
+				addOverlays(Infos.infos);
+				search();
 				break;
-			case COMPASS:
-				mLocationMode = LocationMode.NORMAL;
-				img_myLocation.setImageResource(R.drawable.main_icon_location);
-				mIconLocation = BitmapDescriptorFactory
-						.fromResource(R.drawable.navi_map_gps_locked);
+			case R.id.id_upload_data:
+				Intent intent = new Intent();
+				intent.setClass(MainActivity.this, UpDataActivity.class);
+				startActivity(intent);
 				break;
-			}
-			break;
-		// ¸²¸ÇÎï°´Å¥
-		case R.id.id_overlays:
-			addOverlays(Infos.infos);
-			search();
-			break;
-		case R.id.id_upload_data:
-			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, UpDataActivity.class);
-			startActivity(intent);
-			break;
 		}
 	}
 
 	/**
-	 * ¶¨Î»µ½ÎÒµÄÎ»ÖÃ
+	 * å®šä½åˆ°æˆ‘çš„ä½ç½®
 	 */
 	private void centerToMyLocation() {
 		LatLng ll = new LatLng(mLatitude, mLongitude);
@@ -546,23 +539,23 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Ë«»÷·µ»Ø¼üÍË³ö
+	 * åŒå‡»è¿”å›é”®é€€å‡º
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// ²¶»ñ·µ»Ø¼ü°´ÏÂµÄÊÂ¼ş
+		// æ•è·è¿”å›é”®æŒ‰ä¸‹çš„äº‹ä»¶
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (mMarkerLayout.getVisibility() == View.VISIBLE) {
 				mMarkerLayout.setVisibility(View.GONE);
 				mBaiduMap.hideInfoWindow();
 			} else {
-				// »ñÈ¡µ±Ç°ÏµÍ³Ê±¼äµÄºÁÃëÊı
+				// è·å–å½“å‰ç³»ç»Ÿæ—¶é—´çš„æ¯«ç§’æ•°
 				currentBackTime = System.currentTimeMillis();
-				// ±È½ÏÉÏ´Î°´ÏÂ·µ»Ø¼üºÍµ±Ç°°´ÏÂ·µ»Ø¼üµÄÊ±¼ä²î£¬Èç¹û´óÓÚ2Ãë£¬ÔòÌáÊ¾ÔÙ°´Ò»´ÎÍË³ö
+				// æ¯”è¾ƒä¸Šæ¬¡æŒ‰ä¸‹è¿”å›é”®å’Œå½“å‰æŒ‰ä¸‹è¿”å›é”®çš„æ—¶é—´å·®ï¼Œå¦‚æœå¤§äº2ç§’ï¼Œåˆ™æç¤ºå†æŒ‰ä¸€æ¬¡é€€å‡º
 				if (currentBackTime - lastBackTime > 2 * 1000) {
-					Toast.makeText(this, "ÔÙ°´Ò»´ÎÍË³ö³ÌĞò", Toast.LENGTH_SHORT).show();
+					showToast("å†æŒ‰ä¸€æ¬¡é€€å‡ºç¨‹åº");
 					lastBackTime = currentBackTime;
-				} else { // Èç¹ûÁ½´Î°´ÏÂµÄÊ±¼ä²îĞ¡ÓÚ2Ãë£¬ÔòÍË³ö³ÌĞò
+				} else { // å¦‚æœä¸¤æ¬¡æŒ‰ä¸‹çš„æ—¶é—´å·®å°äº2ç§’ï¼Œåˆ™é€€å‡ºç¨‹åº
 					finish();
 				}
 			}
@@ -571,14 +564,25 @@ public class MainActivity extends Activity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	private void showToast(String text){
+		if(mToast == null){
+			mToast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+		}else {
+			mToast.setText(text);
+			mToast.setDuration(Toast.LENGTH_SHORT);
+		}
+		mToast.show();
+		mToast.setGravity(Gravity.CENTER, 0, 0);
+	}
+
 	protected void onDestroy() {
 		super.onDestroy();
 		mMapView.onDestroy();
 		mMapView = null;
-		// Í£Ö¹¶¨Î»
+		// åœæ­¢å®šä½
 		mBaiduMap.setMyLocationEnabled(false);
 		mLocationClient.stop();
-		// Í£Ö¹·½Ïò´«¸ĞÆ÷
+		// åœæ­¢æ–¹å‘ä¼ æ„Ÿå™¨
 		myOrientationListener.stop();
 	}
 
@@ -590,12 +594,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// ¿ªÆô¶¨Î»
+		// å¼€å¯å®šä½
 		mBaiduMap.setMyLocationEnabled(true);
 		if (!mLocationClient.isStarted()) {
 			mLocationClient.start();
 		}
-		// ¿ªÆô·½Ïò´«¸ĞÆ÷
+		// å¼€å¯æ–¹å‘ä¼ æ„Ÿå™¨
 		myOrientationListener.start();
 
 	}

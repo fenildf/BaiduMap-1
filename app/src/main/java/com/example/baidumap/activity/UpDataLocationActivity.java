@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -43,7 +42,7 @@ import com.example.baidumap.entity.PositionEntity;
 
 public class UpDataLocationActivity extends Activity implements
 		OnClickListener, OnMapLoadedCallback,OnGetGeoCoderResultListener {
-	
+
 	private static String mTAG = "UpDataLocationActivity";
 
 	public MapView mMapView = null;
@@ -52,21 +51,21 @@ public class UpDataLocationActivity extends Activity implements
 	ImageView location_back;
 	Button location_ok_Btn;
 	ImageView mylocation_btn;
-	
+
 	private Toast mtoast;
-	
-	
+
+
 	public LatLng mCenterLatLng;
 	private double myCentureLatitude;
 	private double myCentureLongitude;
 	private String myCentureAddress;
-	
-	private GeoCoder Search;
-	private UiSettings mUiSettings;//µØÍ¼¿ØÖÆ
 
-	// ¶¨Î»Ïà¹Ø
-	public BDLocation currlocation = null; // ´æ´¢µ±Ç°¶¨Î»ĞÅÏ¢
-	public String mAddress;                //´æ´¢µ±Ç°µØÖ·
+	private GeoCoder Search;
+	private UiSettings mUiSettings;//åœ°å›¾æ§åˆ¶
+
+	// å®šä½ç›¸å…³
+	public BDLocation currlocation = null; // å­˜å‚¨å½“å‰å®šä½ä¿¡æ¯
+	public String mAddress;                //å­˜å‚¨å½“å‰åœ°å€
 	private GeoCoder mySearch;
 	public LocationClient mLocationClient = null;
 	public MyLocationListener listener = new MyLocationListener();
@@ -75,23 +74,23 @@ public class UpDataLocationActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	    requestWindowFeature(Window.FEATURE_NO_TITLE);// Òş²Ø±êÌâÀ¸
-		// ÔÚÊ¹ÓÃSDK¸÷×é¼şÖ®Ç°³õÊ¼»¯contextĞÅÏ¢£¬´«ÈëApplicationContext
-		// ×¢Òâ¸Ã·½·¨ÒªÔÙsetContentView·½·¨Ö®Ç°ÊµÏÖ
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// éšè—æ ‡é¢˜æ 
+		// åœ¨ä½¿ç”¨SDKå„ç»„ä»¶ä¹‹å‰åˆå§‹åŒ–contextä¿¡æ¯ï¼Œä¼ å…¥ApplicationContext
+		// æ³¨æ„è¯¥æ–¹æ³•è¦å†setContentViewæ–¹æ³•ä¹‹å‰å®ç°
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_updata_location);
 
 		findView();
 		initView();
 		initLocation();
-		//ÔÚÆÁÄ»ÖĞ¼ä»­³öÍ¼±ê
+		//åœ¨å±å¹•ä¸­é—´ç”»å‡ºå›¾æ ‡
 		CenterIcon centerIcon = new CenterIcon(this, mMapView);
 		getWindow().addContentView(
 				centerIcon,
 				new LayoutParams(LayoutParams.WRAP_CONTENT,
 						LayoutParams.WRAP_CONTENT));
-		
-		// °Ù¶ÈµØÍ¼×´Ì¬¸Ä±ä¼àÌıº¯Êı
+
+		// ç™¾åº¦åœ°å›¾çŠ¶æ€æ”¹å˜ç›‘å¬å‡½æ•°
 		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
 			@Override
 			public void onMapStatusChangeStart(MapStatus status) {
@@ -107,43 +106,43 @@ public class UpDataLocationActivity extends Activity implements
 			public void onMapStatusChange(MapStatus status) {
 				// updateMapState(status);
 			}
-        });  
+		});
 	}
-	
+
 	/**
-	 * »ñÈ¡ÒÆ¶¯ºóÆÁÄ»ÖĞ¼ä¾­Î³¶È
+	 * è·å–ç§»åŠ¨åå±å¹•ä¸­é—´ç»çº¬åº¦
 	 * @param status
 	 */
-    protected void updateMapState(MapStatus status) {
-    	mCenterLatLng = status.target;
-    	/** »ñÈ¡¾­Î³¶È */  
-        myCentureLatitude = mCenterLatLng.latitude;  
-        myCentureLongitude = mCenterLatLng.longitude;
-        LatLng ptCenter = new LatLng(myCentureLatitude, myCentureLongitude);
-        
-    	// ³õÊ¼»¯ËÑË÷Ä£¿é£¬×¢²áÊÂ¼ş¼àÌı
-    	Search = GeoCoder.newInstance();
-    	Search.setOnGetGeoCodeResultListener(this);
-        Search.reverseGeoCode(new ReverseGeoCodeOption().location(ptCenter));
+	protected void updateMapState(MapStatus status) {
+		mCenterLatLng = status.target;
+		/** è·å–ç»çº¬åº¦ */
+		myCentureLatitude = mCenterLatLng.latitude;
+		myCentureLongitude = mCenterLatLng.longitude;
+		LatLng ptCenter = new LatLng(myCentureLatitude, myCentureLongitude);
+
+		// åˆå§‹åŒ–æœç´¢æ¨¡å—ï¼Œæ³¨å†Œäº‹ä»¶ç›‘å¬
+		Search = GeoCoder.newInstance();
+		Search.setOnGetGeoCodeResultListener(this);
+		Search.reverseGeoCode(new ReverseGeoCodeOption().location(ptCenter));
 	}
-    
-    /**
-	 * ·´µØÀí±àÂë»Øµ÷º¯Êı
+
+	/**
+	 * ååœ°ç†ç¼–ç å›è°ƒå‡½æ•°
 	 */
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {  
-            return;  
-        }else{
-        	myCentureAddress = result.getAddress();
-        	showToast(result.getAddress());
-        	Log.e("aa", result.getAddress());
-        }
-        
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			return;
+		}else{
+			myCentureAddress = result.getAddress();
+			showToast(result.getAddress());
+			Log.e("aa", result.getAddress());
+		}
+
 	}
 	/**
-     * ÕÒ¿Ø¼ş
-     */
+	 * æ‰¾æ§ä»¶
+	 */
 	private void findView() {
 		location_back = (ImageView) findViewById(R.id.location_back);
 		location_back.setOnClickListener(this);
@@ -154,31 +153,31 @@ public class UpDataLocationActivity extends Activity implements
 	}
 
 	/**
-	 * ³õÊ¼»¯¶¨Î»
+	 * åˆå§‹åŒ–å®šä½
 	 */
 	private void initLocation() {
-		// ÊµÀı»¯°Ù¶ÈµØÍ¼¶¨Î»ºËĞÄÀà
+		// å®ä¾‹åŒ–ç™¾åº¦åœ°å›¾å®šä½æ ¸å¿ƒç±»
 		mLocationClient = new LocationClient(this);
 		mLocationClient.registerLocationListener(listener);
 
 		// mLocationMode = LocationMode.NORMAL;
-		// // µØÍ¼×´Ì¬°´Å¥
+		// // åœ°å›¾çŠ¶æ€æŒ‰é’®
 		// img_myLocation = (ImageView) findViewById(R.id.id_mylocation_img);
 		// img_myLocation.setImageResource(R.drawable.main_icon_location);
 
-		// ÉèÖÃµØÍ¼²ÎÊı
+		// è®¾ç½®åœ°å›¾å‚æ•°
 		LocationClientOption option = new LocationClientOption();
-		// ÉèÖÃ×ø±êÏµ
+		// è®¾ç½®åæ ‡ç³»
 		option.setCoorType("bd09ll");
-		// ·µ»ØÎ»ÖÃĞÅÏ¢
+		// è¿”å›ä½ç½®ä¿¡æ¯
 		option.setIsNeedAddress(true);
-		// ÆôÓÃ¸ß¾«¶È¶¨Î»
+		// å¯ç”¨é«˜ç²¾åº¦å®šä½
 		option.setOpenGps(true);
-		// ÉèÖÃË¢ĞÂ¼ä¸ô1Ãë
+		// è®¾ç½®åˆ·æ–°é—´éš”1ç§’
 		option.setScanSpan(2000);
 		mLocationClient.setLocOption(option);
 
-		// Æô¶¯µØÍ¼¶¨Î»
+		// å¯åŠ¨åœ°å›¾å®šä½
 		if (!mLocationClient.isStarted()) {
 			mLocationClient.stop();
 		}
@@ -186,26 +185,26 @@ public class UpDataLocationActivity extends Activity implements
 	}
 
 	/**
-	 * ³õÊ¼»¯µØÍ¼
+	 * åˆå§‹åŒ–åœ°å›¾
 	 */
 	private void initView() {
 		mMapView = (MapView) findViewById(R.id.mapView);
 		mBaiduMap = mMapView.getMap();
 		mUiSettings = mBaiduMap.getUiSettings();
-		mUiSettings.setRotateGesturesEnabled(false);//½ûÓÃĞı×ªÊÖÊÆ
-		mUiSettings.setOverlookingGesturesEnabled(false);//½ûÓÃ¸©ÊÓ
-        mMapView.showScaleControl(false);// ²»ÏÔÊ¾µØÍ¼ÉÏ±ÈÀı³ß  
-        mMapView.showZoomControls(false);// ²»ÏÔÊ¾µØÍ¼Ëõ·Å¿Ø¼ş£¨°´Å¥¿ØÖÆÀ¸£©  
-		// ³õÊ¼»¯±ÈÀı³ßµ½100Ã×
+		mUiSettings.setRotateGesturesEnabled(false);//ç¦ç”¨æ—‹è½¬æ‰‹åŠ¿
+		mUiSettings.setOverlookingGesturesEnabled(false);//ç¦ç”¨ä¿¯è§†
+		mMapView.showScaleControl(false);// ä¸æ˜¾ç¤ºåœ°å›¾ä¸Šæ¯”ä¾‹å°º
+		mMapView.showZoomControls(false);// ä¸æ˜¾ç¤ºåœ°å›¾ç¼©æ”¾æ§ä»¶ï¼ˆæŒ‰é’®æ§åˆ¶æ ï¼‰
+		// åˆå§‹åŒ–æ¯”ä¾‹å°ºåˆ°100ç±³
 		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(18.0f);
 		mBaiduMap.setMapStatus(msu);
 	}
 
 	/**
-	 * ¶¨Î»¼àÌıÀà
-	 * 
+	 * å®šä½ç›‘å¬ç±»
+	 *
 	 * @author Administrator
-	 * 
+	 *
 	 */
 	public class MyLocationListener implements BDLocationListener {
 
@@ -215,27 +214,27 @@ public class UpDataLocationActivity extends Activity implements
 				return;
 			}
 			currlocation = location;
-            mAddress = location.getAddrStr();
-			// ·â×°Êı¾İ
+			mAddress = location.getAddrStr();
+			// å°è£…æ•°æ®
 			MyLocationData data = new MyLocationData.Builder()//
 					.accuracy(location.getRadius())//
 					.latitude(location.getLatitude())//
 					.longitude(location.getLongitude())//
 					.build();
-			// °ó¶¨µØÍ¼Êı¾İ
+			// ç»‘å®šåœ°å›¾æ•°æ®
 			mBaiduMap.setMyLocationData(data);
 
-			// µÚÒ»´Î´ò¿ª
+			// ç¬¬ä¸€æ¬¡æ‰“å¼€
 			if (isFirstIn) {
-				// »ñÈ¡×ø±êµã
+				// è·å–åæ ‡ç‚¹
 				LatLng ll = new LatLng(location.getLatitude(),
 						location.getLongitude());
 				MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(update);
 				isFirstIn = false;
 				myCentureLatitude = currlocation.getLatitude();
-		        myCentureLongitude = currlocation.getLongitude();
-		        myCentureAddress = mAddress;
+				myCentureLongitude = currlocation.getLongitude();
+				myCentureAddress = mAddress;
 				// Toast.makeText(context, location.getAddrStr(),
 				// Toast.LENGTH_SHORT).show();
 			}
@@ -245,7 +244,7 @@ public class UpDataLocationActivity extends Activity implements
 	}
 
 	/**
-	 * µØÍ¼¼ÓÔØÍê³Éºó
+	 * åœ°å›¾åŠ è½½å®Œæˆå
 	 */
 	@Override
 	public void onMapLoaded() {
@@ -258,14 +257,14 @@ public class UpDataLocationActivity extends Activity implements
 		// .icon(bitmap).zIndex(9).anchor(0.5f, 0.5f);
 		// marker = (Marker) (mBaiduMap.addOverlay(options));
 		// marker.setFlat(true);
-		
+
 	}
 
 	/**
-	 * ÔÚÆÁÄ»ÖĞ¼äÊµÏÖÒ»¸öView
-	 * 
+	 * åœ¨å±å¹•ä¸­é—´å®ç°ä¸€ä¸ªView
+	 *
 	 * @author Administrator
-	 * 
+	 *
 	 */
 	class CenterIcon extends View {
 
@@ -277,7 +276,7 @@ public class UpDataLocationActivity extends Activity implements
 		public CenterIcon(Context context, MapView mMapView) {
 
 			super(context);
-			// ÉèÖÃÆÁÄ»ÖĞĞÄµÄÍ¼±ê
+			// è®¾ç½®å±å¹•ä¸­å¿ƒçš„å›¾æ ‡
 			mBitmap = BitmapFactory.decodeResource(getResources(),
 					R.drawable.icon_marker_location);
 			this.mMapView = mMapView;
@@ -287,9 +286,9 @@ public class UpDataLocationActivity extends Activity implements
 		protected void onDraw(Canvas canvas) {
 
 			super.onDraw(canvas);
-			// »ñÈ¡ÆÁÄ»ÖĞĞÄµÄ×ø±ê
-				
-		    w = mMapView.getWidth() / 2 - mBitmap.getWidth() / 2;
+			// è·å–å±å¹•ä¸­å¿ƒçš„åæ ‡
+
+			w = mMapView.getWidth() / 2 - mBitmap.getWidth() / 2;
 			h = mMapView.getHeight() / 2 - mBitmap.getHeight();
 			canvas.drawBitmap(mBitmap, w, h, null);
 		}
@@ -299,31 +298,31 @@ public class UpDataLocationActivity extends Activity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.location_back:
-			Intent intent = new Intent(UpDataLocationActivity.this,
-					UpDataActivity.class);
-			setResult(RESULT_OK, intent);
-			finish();
-			break;
-		case R.id.location_ok:
-			PositionEntity.latitue = myCentureLatitude;
-	        PositionEntity.longitude = myCentureLongitude;
-	        PositionEntity.address = myCentureAddress;
-	        Log.e(mTAG, PositionEntity.latitue+"-"+PositionEntity.longitude+"-"+PositionEntity.address);
-	        Intent intent2 = new Intent(UpDataLocationActivity.this,
-					UpDataActivity.class);
-			setResult(RESULT_OK, intent2);
-			finish();
-			break;
-		case R.id.id_mylocation_btn:
-			LatLng ll = new LatLng(currlocation.getLatitude(), currlocation.getLongitude());
-			MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.animateMapStatus(update);
-			break;
+			case R.id.location_back:
+				Intent intent = new Intent(UpDataLocationActivity.this,
+						UpDataActivity.class);
+				setResult(RESULT_OK, intent);
+				finish();
+				break;
+			case R.id.location_ok:
+				PositionEntity.latitue = myCentureLatitude;
+				PositionEntity.longitude = myCentureLongitude;
+				PositionEntity.address = myCentureAddress;
+				Log.e(mTAG, PositionEntity.latitue+"-"+PositionEntity.longitude+"-"+PositionEntity.address);
+				Intent intent2 = new Intent(UpDataLocationActivity.this,
+						UpDataActivity.class);
+				setResult(RESULT_OK, intent2);
+				finish();
+				break;
+			case R.id.id_mylocation_btn:
+				LatLng ll = new LatLng(currlocation.getLatitude(), currlocation.getLongitude());
+				MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
+				mBaiduMap.animateMapStatus(update);
+				break;
 		}
 	}
 	/**
-	 * ÖØĞ´ÍÂË¾
+	 * é‡å†™åå¸
 	 * @param text
 	 */
 	public void showToast(String text) {
@@ -334,7 +333,7 @@ public class UpDataLocationActivity extends Activity implements
 			mtoast.setDuration(Toast.LENGTH_SHORT);
 		}
 		mtoast.show();
-//		mtoast.setGravity(Gravity.BOTTOM, 0, 0);  //´°¿ÚÎ»ÖÃ
+//		mtoast.setGravity(Gravity.BOTTOM, 0, 0);  //çª—å£ä½ç½®
 	}
 
 	protected void onDestroy() {
@@ -352,7 +351,7 @@ public class UpDataLocationActivity extends Activity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// ¿ªÆô¶¨Î»
+		// å¼€å¯å®šä½
 		mBaiduMap.setMyLocationEnabled(true);
 		if (!mLocationClient.isStarted()) {
 			mLocationClient.start();
@@ -367,19 +366,19 @@ public class UpDataLocationActivity extends Activity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
-		// Í£Ö¹¶¨Î»
+		// åœæ­¢å®šä½
 		mBaiduMap.setMyLocationEnabled(false);
 		mLocationClient.stop();
-		
+
 	}
 
-    /**
-     * µØÀí±àÂë»Øµ÷º¯Êı
-     */
+	/**
+	 * åœ°ç†ç¼–ç å›è°ƒå‡½æ•°
+	 */
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult result) {
-		
+
 	}
-	
+
 
 }

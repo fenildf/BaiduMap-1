@@ -1,5 +1,9 @@
 package com.example.baidumap.api;
 
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -8,41 +12,36 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import android.R.string;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
 /**
- * °Ù¶ÈÔÆ¼ìË÷Ê¹ÓÃÀà  GETÇëÇó
- * 
+ * ç™¾åº¦äº‘æ£€ç´¢ä½¿ç”¨ç±»  GETè¯·æ±‚
+ *
  * @author Lu.Jian
- * 
+ *
  */
 public class LBSSearch {
 	private static String mTAG = "LBSSearch";
-	// °Ù¶ÈÔÆ¼ìË÷API URI
+	// ç™¾åº¦äº‘æ£€ç´¢API URI
 	private static final String SEARCH_URI_LOCAL = "http://api.map.baidu.com/geosearch/v3/local?";
-	// ÔÆ¼ìË÷¹«Ô¿
+	// äº‘æ£€ç´¢å…¬é’¥
 	private static String ak = "W9aWyT6yAaILUOur0j8BjOgl";
-	//Ã¿Ò³ÏÔÊ¾ÊıÁ¿
+	//æ¯é¡µæ˜¾ç¤ºæ•°é‡
 	private static String page_size = "50";
 	private static String geotable_id = "133284";
 
 	private static int retry = 1;
 	private static boolean IsBusy = false;
-	
+
 	/**
-	 * ÔÆ¼ìË÷·ÃÎÊ
-	 * 
+	 * äº‘æ£€ç´¢è®¿é—®
+	 *
 	 * @param filterParams
-	 *            ·ÃÎÊ²ÎÊı.
+	 *            è®¿é—®å‚æ•°.
 	 * @param handler
-	 *            Êı¾İ»Øµ÷Handler
+	 *            æ•°æ®å›è°ƒHandler
 	 * @return
 	 */
 	public static boolean request(final HashMap<String, String> filterParams,
-			final Handler handler) {
+								  final Handler handler) {
 
 		if (IsBusy || filterParams == null)
 			return false;
@@ -56,7 +55,7 @@ public class LBSSearch {
 						String requestURL = "";
 						requestURL = SEARCH_URI_LOCAL;
 						requestURL = requestURL + "&" + "ak=" + ak
-								+ "&geotable_id=" + geotable_id 
+								+ "&geotable_id=" + geotable_id
 								+ "&page_size=" + page_size;
 
 						Iterator iter = filterParams.entrySet().iterator();
@@ -73,13 +72,13 @@ public class LBSSearch {
 						URL requestUrl = new URL(requestURL);
 						HttpURLConnection connection = (HttpURLConnection) requestUrl
 								.openConnection();
-						// ½¨Á¢Êµ¼ÊµÄÁ¬½Ó
+						// å»ºç«‹å®é™…çš„è¿æ¥
 						connection.connect();
-						
+
 						BufferedReader reader = new BufferedReader(
 								new InputStreamReader(
 										connection.getInputStream(), "utf-8"));
-						
+
 						StringBuilder entityStringBuilder=new StringBuilder();
 						String result = "";
 						while ((result = reader.readLine()) != null) {
@@ -90,12 +89,12 @@ public class LBSSearch {
 						msg.what = 0;
 						msg.obj = entityStringBuilder.toString();
 						msg.sendToTarget();
-						
-						reader.close();  
-				        connection.disconnect();
+
+						reader.close();
+						connection.disconnect();
 
 					} catch (Exception e) {
-						Log.e(mTAG, "GETÇëÇó´íÎó£¡");
+						Log.e(mTAG, "GETè¯·æ±‚é”™è¯¯ï¼");
 						e.printStackTrace();
 					}
 					count--;

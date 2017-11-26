@@ -1,6 +1,5 @@
 package com.example.baidumap.activity;
 
-import com.example.baidumap.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,21 +10,21 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 
+import com.example.baidumap.R;
+
 public class AppStart extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Òş²Ø±êÌâÀ¸
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// Òş²Ø×´Ì¬À¸
+		// éšè—æ ‡é¢˜æ 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		final View view = View.inflate(this, R.layout.appstart, null);
 		setContentView(view);
 
-		// ½¥±äÕ¹Ê¾Æô¶¯ÆÁ
 		AlphaAnimation aa = new AlphaAnimation(0.3f, 1.0f);
 		aa.setDuration(2000);
 		view.startAnimation(aa);

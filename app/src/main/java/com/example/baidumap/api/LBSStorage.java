@@ -1,5 +1,9 @@
 package com.example.baidumap.api;
 
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -10,24 +14,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.http.client.HttpClient;
-import org.json.JSONObject;
-
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
 /**
- * °Ù¶ÈÔÆ´æ´¢Ê¹ÓÃÀà POSTÇëÇó
- * 
+ * ç™¾åº¦äº‘å­˜å‚¨ä½¿ç”¨ç±» POSTè¯·æ±‚
+ *
  * @author Lu.Jian
- * 
+ *
  */
 public class LBSStorage {
 	private static String mTAG = "LBSStorage";
-	// °Ù¶ÈÔÆ¼ìË÷API URI
+	// ç™¾åº¦äº‘æ£€ç´¢API URI
 	private static final String SEARCH_URI = "http://api.map.baidu.com/geodata/v3/poi/create";
-	// ÔÆ¼ìË÷¹«Ô¿
+	// äº‘æ£€ç´¢å…¬é’¥
 	private static String ak = "W9aWyT6yAaILUOur0j8BjOgl";
 	private static String geotable_id = "133284";
 	private static String coord_type = "3";
@@ -36,14 +33,14 @@ public class LBSStorage {
 	private static boolean IsBusy = false;
 
 	/**
-	 * ÔÆ´æ´¢·ÃÎÊ
-	 * 
+	 * äº‘å­˜å‚¨è®¿é—®
+	 *
 	 * @param filterParams
 	 * @param handler
 	 * @return
 	 */
 	public static boolean request(final HashMap<String, String> filterParams,
-			final Handler handler) {
+								  final Handler handler) {
 		if (IsBusy || filterParams == null)
 			return false;
 		IsBusy = true;
@@ -75,21 +72,21 @@ public class LBSStorage {
 						connection.setDoOutput(true);
 						connection.setDoInput(true);
 						connection.setRequestMethod("POST");
-						// Post ÇëÇó²»ÄÜÊ¹ÓÃ»º´æ
+						// Post è¯·æ±‚ä¸èƒ½ä½¿ç”¨ç¼“å­˜
 						connection.setUseCaches(false);
 						connection.setInstanceFollowRedirects(true);
 						connection.setRequestProperty("Content-Type",
 								"application/x-www-form-urlencoded");
 
-						// ½¨Á¢Êµ¼ÊµÄÁ¬½Ó
+						// å»ºç«‹å®é™…çš„è¿æ¥
 						connection.connect();
 
 						DataOutputStream out = new DataOutputStream(
 								connection.getOutputStream());
-						
+
 						String content = "";
 						content = "&" + "ak=" + ak +
-								"&geotable_id=" + geotable_id + 
+								"&geotable_id=" + geotable_id +
 								"&coord_type=" + coord_type;
 						Iterator iter = filterParams.entrySet().iterator();
 						while (iter.hasNext()) {
@@ -101,11 +98,11 @@ public class LBSStorage {
 							content = content + "&" + key + "=" + valueString;
 						}
 						Log.e(mTAG, content);
-						
+
 						out.writeBytes(content);
 						out.flush();
 						out.close();
-						
+
 						BufferedReader reader = new BufferedReader(
 								new InputStreamReader(
 										connection.getInputStream(), "utf-8"));
@@ -120,12 +117,12 @@ public class LBSStorage {
 						msg.what = 3;
 						msg.obj = entityStringBuilder.toString();
 						msg.sendToTarget();
-						
-						reader.close();  
-				        connection.disconnect();
+
+						reader.close();
+						connection.disconnect();
 
 					} catch (Exception e) {
-						Log.e(mTAG, "POSTÇëÇó´íÎó£¡");
+						Log.e(mTAG, "POSTè¯·æ±‚é”™è¯¯ï¼");
 						e.printStackTrace();
 					}
 					count--;

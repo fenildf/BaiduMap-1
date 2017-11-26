@@ -47,7 +47,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// Òş²Ø±êÌâÀ¸
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// éšè—æ ‡é¢˜æ 
 		setContentView(R.layout.activity_updata);
 
 		findView();
@@ -55,7 +55,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ÕÒ¿Ø¼ş
+	 * æ‰¾æ§ä»¶
 	 */
 	private void findView() {
 		PositionBtn = (SettingItemViewBtn) findViewById(R.id.myPosition);
@@ -71,15 +71,15 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ·¢ÆğÔÆ´æ´¢ÇëÇó
+	 * å‘èµ·äº‘å­˜å‚¨è¯·æ±‚
 	 */
 	private void storage() {
 		LBSStorage.request(getRequestParams(), mHandler);
 	}
 
 	/**
-	 * Éè¶¨ÔÆ¼ìË÷²ÎÊı
-	 * 
+	 * è®¾å®šäº‘æ£€ç´¢å‚æ•°
+	 *
 	 * @return
 	 */
 	private HashMap<String, String> getRequestParams() {
@@ -110,26 +110,26 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 3:
-				if (msg.obj == null) {
-					Log.e(mTAG, "msg½ÓÊÕÊı¾İÎª¿Õ");
-				} else {
-					String result = msg.obj.toString();
-					try {
-						JSONObject json = new JSONObject(result);
-						parser(json);
-					} catch (JSONException e) {
-						e.printStackTrace();
+				case 3:
+					if (msg.obj == null) {
+						Log.e(mTAG, "msgæ¥æ”¶æ•°æ®ä¸ºç©º");
+					} else {
+						String result = msg.obj.toString();
+						try {
+							JSONObject json = new JSONObject(result);
+							parser(json);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-				break;
+					break;
 			}
 		}
 	};
 
 	/**
-	 * ½âÎö·µ»ØÊı¾İ
-	 * 
+	 * è§£æè¿”å›æ•°æ®
+	 *
 	 * @param json
 	 */
 	protected void parser(JSONObject json) {
@@ -137,65 +137,65 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		List<Infos> list = infos.getReturnInfos();
 		try {
 			if (json.getInt("status") != 0) {
-				Log.e(mTAG, "POSTÉÏ´«´íÎó" + "status=" + json.getInt("status")
+				Log.e(mTAG, "POSTä¸Šä¼ é”™è¯¯" + "status=" + json.getInt("status")
 						+ "message=" + json.getString("message"));
-				Toast.makeText(this, "Ìá½»Ê§°Ü", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "æäº¤å¤±è´¥", Toast.LENGTH_SHORT).show();
 			} else {
 				Log.e(mTAG, "status=" + json.getInt("status") + "message="
 						+ json.getString("message"));
 				Infos info = new Infos();
 				info.setReturnid(json.getString("id"));
 				list.add(info);
-				Toast.makeText(this, "Ìá½»³É¹¦", Toast.LENGTH_SHORT).show();
-				
+				Toast.makeText(this, "æäº¤æˆåŠŸ", Toast.LENGTH_SHORT).show();
+
 				PositionEntity.address = null;
 				PositionEntity.latitue = 0;
 				PositionEntity.longitude = 0;
 				TitleEdit.getMyRightTextView().setText("");
-				PositionBtn.setLeftText("ÇëÈ·¶¨µ±Ç°Î»ÖÃ");
+				PositionBtn.setLeftText("è¯·ç¡®å®šå½“å‰ä½ç½®");
 			}
 
 		} catch (Exception e) {
-			Log.e(mTAG, "parser´íÎó£¡");
+			Log.e(mTAG, "parseré”™è¯¯ï¼");
 		}
 	}
 
 	/**
-	 * ³õÊ¼»¯Ò³Ãæ
+	 * åˆå§‹åŒ–é¡µé¢
 	 */
 	private void initData() {
-		PositionBtn.setLeftText("ÇëÈ·¶¨µ±Ç°Î»ÖÃ");
+		PositionBtn.setLeftText("è¯·ç¡®å®šå½“å‰ä½ç½®");
 		PositionBtn.setRightBitMap(R.drawable.image_more_subitem_arrow);
-		TitleEdit.setLeftText("Ö÷Ìâ:");
-		upload_data_btn.setText("Ìá½»");
+		TitleEdit.setLeftText("ä¸»é¢˜:");
+		upload_data_btn.setText("æäº¤");
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.myupload_data_btn:
-			if (PositionEntity.latitue != 0 && PositionEntity.longitude != 0) {
-				if (TitleEdit.getMyRightTextView().getText().length() >= 1) {
-					Log.e(mTAG, "Ö÷Ìâ²»Îª¿Õ");
-					storage();
+			case R.id.myupload_data_btn:
+				if (PositionEntity.latitue != 0 && PositionEntity.longitude != 0) {
+					if (TitleEdit.getMyRightTextView().getText().length() >= 1) {
+						Log.e(mTAG, "ä¸»é¢˜ä¸ä¸ºç©º");
+						storage();
+					} else {
+						Toast.makeText(this, "è¯·è¾“å…¥ä¸»é¢˜", Toast.LENGTH_SHORT).show();
+					}
 				} else {
-					Toast.makeText(this, "ÇëÊäÈëÖ÷Ìâ", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "è¯·ç¡®å®šä½ç½®", Toast.LENGTH_SHORT).show();
 				}
-			} else {
-				Toast.makeText(this, "ÇëÈ·¶¨Î»ÖÃ", Toast.LENGTH_SHORT).show();
-			}
-			break;
-		case R.id.myPosition:
-			Intent intent = new Intent();
-			intent.setClass(UpDataActivity.this, UpDataLocationActivity.class);
-			startActivity(intent);
-			break;
-		case R.id.updata_back:
-			Intent intent2 = new Intent(UpDataActivity.this, MainActivity.class);
-			intent2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			setResult(1, intent2);
-			finish();
-			break;
+				break;
+			case R.id.myPosition:
+				Intent intent = new Intent();
+				intent.setClass(UpDataActivity.this, UpDataLocationActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.updata_back:
+				Intent intent2 = new Intent(UpDataActivity.this, MainActivity.class);
+				intent2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				setResult(1, intent2);
+				finish();
+				break;
 		}
 	}
 
@@ -212,10 +212,10 @@ public class UpDataActivity extends Activity implements OnClickListener {
 	// + Double.toString(myCentureLongitude));
 	//
 	// } catch (Exception e) {
-	// Log.e(mTAG, "·µ»ØÊı¾İÎª¿Õ");
+	// Log.e(mTAG, "è¿”å›æ•°æ®ä¸ºç©º");
 	// }
 	// }
-	
+
 	protected void onDestroy() {
 		super.onDestroy();
 	}
@@ -229,7 +229,7 @@ public class UpDataActivity extends Activity implements OnClickListener {
 		super.onStart();
 		if(PositionEntity.latitue != 0 || PositionEntity.longitude != 0){
 			PositionBtn.getMyLeftTextView().setTextColor(0xFFFFB90F);
-			PositionBtn.setLeftText("ÒÑÈ·¶¨Î»ÖÃ");
+			PositionBtn.setLeftText("å·²ç¡®å®šä½ç½®");
 		}
 	}
 

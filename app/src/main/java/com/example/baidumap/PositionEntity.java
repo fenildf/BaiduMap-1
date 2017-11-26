@@ -3,7 +3,7 @@ package com.example.baidumap;
 import java.text.DecimalFormat;
 
 /**
- * 封装的关于位置的实体
+ * 灏佽鐨勫叧浜庝綅缃殑瀹炰綋
  * @author Administrator
  *
  */

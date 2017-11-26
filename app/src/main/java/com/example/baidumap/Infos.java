@@ -14,20 +14,20 @@ public class Infos implements Serializable{
 	private String addr;
 	private String distance;
 	private int zan;
-	
+
 	private String returnid;
-	
+
 	private double mLatitude;
 	private double mLongitude;
-	
+
 	public static List<Infos> infos = new ArrayList<Infos>();
-	
+
 	public static List<Infos> returnInfos = new ArrayList<Infos>();
-	
+
 //	static{
-//		infos.add(new Infos(34.242652, 108.971171, R.drawable.a01, "Ë®¹ûµê","¾àÀë500Ã×", 1000));
+//		infos.add(new Infos(34.242652, 108.971171, R.drawable.a01, "æ°´æœåº—","è·ç¦»500ç±³", 1000));
 //	}
-	
+
 //	public Infos(double latitude, double longitude, int imgId, String name,
 //			String distance, int zan) {
 //		super();
@@ -38,8 +38,8 @@ public class Infos implements Serializable{
 //		this.distance = distance;
 //		this.zan = zan;
 //	}
-	
-	
+
+
 
 	public static List<Infos> getInfos() {
 		return infos;
@@ -47,8 +47,8 @@ public class Infos implements Serializable{
 	public static void setInfos(List<Infos> infos) {
 		Infos.infos = infos;
 	}
-	
-	//ÎÒµÄÎ»ÖÃ×ø±ê
+
+	//æˆ‘çš„ä½ç½®åæ ‡
 	public void setmLatitude(double mLatitude) {
 		this.mLatitude = mLatitude;
 	}
@@ -61,8 +61,8 @@ public class Infos implements Serializable{
 	public double getmLongitude() {
 		return mLongitude;
 	}
-	
-	
+
+
 	public String getAddr() {
 		return addr;
 	}
@@ -105,24 +105,24 @@ public class Infos implements Serializable{
 	public void setZan(int zan) {
 		this.zan = zan;
 	}
-	
-	
-	//ÔÆ´æ´¢·µ»ØÊı¾İ
+
+
+	//äº‘å­˜å‚¨è¿”å›æ•°æ®
 	public String getReturnid() {
 		return returnid;
 	}
 	public void setReturnid(String returnid) {
 		this.returnid = returnid;
 	}
-	
+
 	public static List<Infos> getReturnInfos() {
 		return returnInfos;
 	}
 	public static void setReturnInfos(List<Infos> returnInfos) {
 		Infos.returnInfos = returnInfos;
 	}
-	
-	
-	
-	
+
+
+
+
 }

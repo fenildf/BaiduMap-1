@@ -1,8 +1,6 @@
 package com.example.baidumap.view;
 
 
-import com.example.baidumap.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.baidumap.R;
 
 public class SettingItemViewEdit extends LinearLayout{
 
@@ -32,14 +32,14 @@ public class SettingItemViewEdit extends LinearLayout{
 		myRightEditText = (EditText) view.findViewById(R.id.setting_edit_RightEdit);
 	}
     /**
-     * ·µ»Ø×ó±ßµÄ¿Ø¼ş
+     * è¿”å›å·¦è¾¹çš„æ§ä»¶
      * @return
      */
 	public TextView getMyLeftTextView() {
 		return myLeftTextView;
 	}
 	/**
-	 * ·µ»ØÓÒ±ßµÄ¿Ø¼ş
+	 * è¿”å›å³è¾¹çš„æ§ä»¶
 	 * @return
 	 */
 	public TextView getMyRightTextView() {
@@ -48,14 +48,14 @@ public class SettingItemViewEdit extends LinearLayout{
 	
 	
 	/**
-	 * ÉèÖÃ×ó±ßµÄÎÄ×Ö
+	 * è®¾ç½®å·¦è¾¹çš„æ–‡å­—
 	 * @param txt
 	 */
 	public void setLeftText(String txt){
 		myLeftTextView.setText(txt);
 	}
 	/**
-	 * ÉèÖÃÓÒ±ßµÄÎÄ×Ö
+	 * è®¾ç½®å³è¾¹çš„æ–‡å­—
 	 * @param txt
 	 */
 	public void setRightText(String txt){

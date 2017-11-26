@@ -7,18 +7,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 /**
- * ·½Ïò´«¸ĞÆ÷¼àÌı
- * 
+ * æ–¹å‘ä¼ æ„Ÿå™¨ç›‘å¬
+ *
  * @author Administrator
- * 
+ *
  */
 public class MyOrientationListener implements SensorEventListener {
 
 	private SensorManager mSensorManager;
 	private Context mContext;
 
-	private Sensor accelerometer; // ¼ÓËÙ¶È´«¸ĞÆ÷
-	private Sensor magnetic; // µØ´Å³¡´«¸ĞÆ÷
+	private Sensor accelerometer; // åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨
+	private Sensor magnetic; // åœ°ç£åœºä¼ æ„Ÿå™¨
 	private float[] accelerometerValues = new float[3];
 	private float[] magneticFieldValues = new float[3];
 
@@ -29,23 +29,23 @@ public class MyOrientationListener implements SensorEventListener {
 	}
 
 	public void start() {
-		// ÊµÀı»¯´«¸ĞÆ÷¹ÜÀíÕß
+		// å®ä¾‹åŒ–ä¼ æ„Ÿå™¨ç®¡ç†è€…
 		mSensorManager = (SensorManager) mContext
 				.getSystemService(Context.SENSOR_SERVICE);
-		// ³õÊ¼»¯¼ÓËÙ¶È´«¸ĞÆ÷
+		// åˆå§‹åŒ–åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨
 		accelerometer = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		// ³õÊ¼»¯µØ´Å³¡´«¸ĞÆ÷
+		// åˆå§‹åŒ–åœ°ç£åœºä¼ æ„Ÿå™¨
 		magnetic = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-		// ×¢²á¼àÌı
+		// æ³¨å†Œç›‘å¬
 		mSensorManager.registerListener(this, accelerometer,
 				Sensor.TYPE_ACCELEROMETER);
 		mSensorManager.registerListener(this, magnetic,
 				Sensor.TYPE_MAGNETIC_FIELD);
 
 		// if(mSensorManager != null){
-		// //»ñµÃ·½Ïò´«¸ĞÆ÷
+		// //è·å¾—æ–¹å‘ä¼ æ„Ÿå™¨
 		// mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		// }
 		// if(mSensor != null){
@@ -79,18 +79,18 @@ public class MyOrientationListener implements SensorEventListener {
 		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			magneticFieldValues = event.values;
 		}
-		
+
 		float x = calculateOrientation();
-		
+
 		if (mOnOrientationListener != null) {
 			mOnOrientationListener.onOrientationChanged(x);
 		}
-		
+
 		lastX = x;
 	}
 
 	/**
-	 * ¼ÆËã½Ç¶È
+	 * è®¡ç®—è§’åº¦
 	 */
 	private float calculateOrientation() {
 		float[] values = new float[3];
@@ -99,14 +99,14 @@ public class MyOrientationListener implements SensorEventListener {
 		mSensorManager.getRotationMatrix(R, null, accelerometerValues,
 				magneticFieldValues);
 		mSensorManager.getOrientation(R, values);
-		
-		//»»Ëã³É½Ç¶ÈÖµ
+
+		//æ¢ç®—æˆè§’åº¦å€¼
 		values[0] = (float) Math.toDegrees(values[0]);
 
 		return values[0];
 	}
 
-	//¶ÔÍâÊı¾İ½Ó¿Ú
+	//å¯¹å¤–æ•°æ®æ¥å£
 	public OnOrientationListener mOnOrientationListener;
 	public void setOnOrientationListener(
 			OnOrientationListener mOnOrientationListener) {
