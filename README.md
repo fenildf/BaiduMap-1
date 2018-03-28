@@ -1,5 +1,5 @@
 BaiduMap LBS云
-====================
+------
 >地图SDK
 定位SDK  
 云存储-HTTP POST请求  
@@ -9,6 +9,7 @@ BaiduMap LBS云
 ------
 
 2018/3/28更新
+- 优化代码
 - Rxjava2+Retrofit2+Okhttp3网络请求
 - Butterknife8注解
 
