@@ -16,10 +16,10 @@ BaiduMap LBS云
 ------
 
 # DEMO图片  
-### 主界面
+###主界面
 <img src="https://github.com/wangtaoT/BaiduMap/blob/master/DEMO-image/0x001.png" width="300" />
-### 可移动定位点
+###可移动定位点
 <img src="https://github.com/wangtaoT/BaiduMap/blob/master/DEMO-image/0x002.png" width="300" />
-### 添加标记点
+###添加标记点
 <img src="https://github.com/wangtaoT/BaiduMap/blob/master/DEMO-image/0x003.png" width="300" />
 
