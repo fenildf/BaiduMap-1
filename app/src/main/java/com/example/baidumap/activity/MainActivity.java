@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -39,6 +41,7 @@ import com.example.baidumap.mvp.model.LBSModel;
 import com.example.baidumap.mvp.presenter.LBSSearchPresenter;
 import com.example.baidumap.mvp.view.ILBSSearchView;
 import com.example.baidumap.utils.ToastUtils;
+import com.example.baidumap.widght.CenterIconView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +63,6 @@ public class MainActivity extends Activity implements ILBSSearchView {
     private Context context;
     @BindView(R.id.id_mylocation)
     Button btn_myLocation;
-    @BindView(R.id.id_overlays)
-    Button btn_overlays;
     @BindView(R.id.id_upload_data)
     Button btn_uploaddata;
     @BindView(R.id.rl_marker_layout)
@@ -70,10 +71,12 @@ public class MainActivity extends Activity implements ILBSSearchView {
     TextView tv_addr;
 
     // 定位相关
-    public BDLocation currlocation = null; // 存储当前定位信息
+    public BDLocation currlocation = null; // 存储当前我的定位信息
     public LocationClient mLocationClient = null;
     public MyLocationListener listener = new MyLocationListener();
     private boolean isFirstIn = true;
+
+    //当前位置坐标
     public double mLatitude;
     public double mLongitude;
     // 自定义定位图标
@@ -97,10 +100,14 @@ public class MainActivity extends Activity implements ILBSSearchView {
         searchPresenter = new LBSSearchPresenter(new LBSModel(), this);
 
         //初始化覆盖物图标
-        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker);
+        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_bike_nearby);
 
         initView();
         initLocation();
+
+        //在屏幕中间画出图标
+        CenterIconView centerIconView = new CenterIconView(this, mMapView);
+        getWindow().addContentView(centerIconView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     /**
@@ -124,6 +131,24 @@ public class MainActivity extends Activity implements ILBSSearchView {
             }
         });
 
+        // 百度地图状态改变监听函数
+        mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
+            @Override
+            public void onMapStatusChangeStart(MapStatus status) {
+                // updateMapState(status);
+            }
+
+            @Override
+            public void onMapStatusChangeFinish(MapStatus status) {
+                updateMapState(status);
+            }
+
+            @Override
+            public void onMapStatusChange(MapStatus status) {
+                // updateMapState(status);
+            }
+        });
+
         //标记点击事件
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
@@ -132,10 +157,10 @@ public class MainActivity extends Activity implements ILBSSearchView {
                 MarkerBean.ContentsBean info;
                 info = (MarkerBean.ContentsBean) extraInfo.getSerializable("info");
 
-                // 将标记点移至中间
-                LatLng latlng = new LatLng(info.getLocation().get(1), info.getLocation().get(0));
-                MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latlng);
-                mBaiduMap.animateMapStatus(msu);
+//                // 将标记点移至中间
+//                LatLng latlng = new LatLng(info.getLocation().get(1), info.getLocation().get(0));
+//                MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latlng);
+//                mBaiduMap.animateMapStatus(msu);
 
                 tv_addr.setText(info.getAddress());
 
@@ -202,10 +227,11 @@ public class MainActivity extends Activity implements ILBSSearchView {
     }
 
     //发起云检索
-    private void ApiGetInfo() {
+    private void ApiGetInfo(Double Longitude, Double Latitude) {
+        dataMarker.clear();
         String location = "";
         if (currlocation != null) {
-            location = currlocation.getLongitude() + "," + currlocation.getLatitude();
+            location = Longitude + "," + Latitude;
         }
         searchPresenter.getSearch(AppConfig.AK, AppConfig.GEOTABLE_ID, "9999", AppConfig.RADIUS, location);
     }
@@ -217,7 +243,7 @@ public class MainActivity extends Activity implements ILBSSearchView {
 
         for (MarkerBean.ContentsBean info : list) {
             latlng = new LatLng(info.getLocation().get(1), info.getLocation().get(0));
-            MarkerOptions options = new MarkerOptions().position(latlng).icon(bitmap).zIndex(9).draggable(false);
+            MarkerOptions options = new MarkerOptions().position(latlng).icon(bitmap).zIndex(5).draggable(false);
 
             options.animateType(MarkerAnimateType.grow);
             Marker marker = (Marker) (mBaiduMap.addOverlay(options));
@@ -236,6 +262,16 @@ public class MainActivity extends Activity implements ILBSSearchView {
         } else {
             ToastUtils.showToast(this, "请求错误");
         }
+    }
+
+    //获取移动后屏幕中间经纬度
+    protected void updateMapState(MapStatus status) {
+        LatLng mCenterLatLng = status.target;
+        //获取经纬度
+        mLatitude = mCenterLatLng.latitude;
+        mLongitude = mCenterLatLng.longitude;
+
+        ApiGetInfo(mLongitude, mLatitude);
     }
 
     /**
@@ -278,21 +314,18 @@ public class MainActivity extends Activity implements ILBSSearchView {
                 mBaiduMap.animateMapStatus(update);
                 isFirstIn = false;
 
-                ApiGetInfo();
+                ApiGetInfo(currlocation.getLongitude(), currlocation.getLatitude());
             }
 
         }
     }
 
-    @OnClick({R.id.id_mylocation, R.id.id_overlays, R.id.id_upload_data})
+    @OnClick({R.id.id_mylocation, R.id.id_upload_data})
     public void onClick(View v) {
         switch (v.getId()) {
             // 我的位置按钮
             case R.id.id_mylocation:
                 centerToMyLocation();
-                break;
-            case R.id.id_overlays:
-                ApiGetInfo();
                 break;
             case R.id.id_upload_data:
                 Intent intent = new Intent();
@@ -306,7 +339,7 @@ public class MainActivity extends Activity implements ILBSSearchView {
      * 定位到我的位置
      */
     private void centerToMyLocation() {
-        LatLng ll = new LatLng(mLatitude, mLongitude);
+        LatLng ll = new LatLng(currlocation.getLatitude(), currlocation.getLongitude());
         MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(update);
     }
@@ -358,7 +391,7 @@ public class MainActivity extends Activity implements ILBSSearchView {
     @Override
     protected void onRestart() {
         super.onRestart();
-        ApiGetInfo();
+        ApiGetInfo(currlocation.getLongitude(), currlocation.getLatitude());
     }
 
     @Override
