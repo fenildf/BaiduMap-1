@@ -1,0 +1,153 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:2:1-64:12
+	package
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:3:5-35
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:5:5-30
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+	android:versionCode
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:4:5-28
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:8:5-81
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:8:22-78
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:10:5-79
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:10:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:12:5-76
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:12:22-73
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:14:5-79
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:14:22-76
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:16:5-76
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:16:22-73
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:18:5-75
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:18:22-72
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:20:5-81
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:20:22-78
+uses-permission#android.permission.INTERNET
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:22:5-67
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:22:22-64
+uses-permission#com.android.launcher.permission.READ_SETTINGS
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:24:5-85
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:24:22-82
+uses-permission#android.permission.WAKE_LOCK
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:25:5-68
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:25:22-65
+application
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:27:5-61:19
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Tman\.android\build-cache\4b4c716a5c8164c9ee70e61e0e5f94f133bc6ac8\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Tman\.android\build-cache\9889a4b471eed07c8bf857afcce5f553bc78086b\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Tman\.android\build-cache\f150342b98c7cb6879dfabc03d56dda2401ac379\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Tman\.android\build-cache\3b213fa247538a9545d75af23eb7b653437b2fbd\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Tman\.android\build-cache\c0c9473a991a661b9d83db0bf562949d5c06e31f\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Tman\.android\build-cache\7963e46e85f4f94d2deb9184fb586123535b6f6a\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Tman\.android\build-cache\379ebb905e0ece0d2bcd9b7ea99c1875502b9d29\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Tman\.android\build-cache\f724bf4fa4222369f8e5551f33e222281696ee95\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Tman\.android\build-cache\8d2226c9d04ab47b5435cb3329c97a1ac9eb68b2\output\AndroidManifest.xml:29:5-20
+	android:label
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:31:9-41
+	android:allowBackup
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:29:9-35
+	android:icon
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:30:9-45
+	android:theme
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:32:9-40
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:28:9-28
+activity#com.example.baidumap.activity.AppStartActivity
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:34:9-42:20
+	android:theme
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:36:13-50
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:35:13-74
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:37:13-41:29
+action#android.intent.action.MAIN
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:38:17-69
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:38:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:40:17-77
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:40:27-74
+meta-data#com.baidu.lbsapi.API_KEY
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:44:9-46:56
+	android:value
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:46:13-53
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:45:13-52
+service#com.baidu.location.f
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:48:9-51:41
+	android:enabled
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:50:13-35
+	android:process
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:51:13-38
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:49:13-48
+activity#com.example.baidumap.activity.MainActivity
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:53:9-57:20
+	android:label
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:55:13-45
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:54:13-70
+activity#com.example.baidumap.activity.AddMarkerActivity
+ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:58:9-84
+	android:name
+		ADDED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml:58:19-81
+uses-sdk
+INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Tman\.android\build-cache\4b4c716a5c8164c9ee70e61e0e5f94f133bc6ac8\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Tman\.android\build-cache\9889a4b471eed07c8bf857afcce5f553bc78086b\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Tman\.android\build-cache\f150342b98c7cb6879dfabc03d56dda2401ac379\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Tman\.android\build-cache\3b213fa247538a9545d75af23eb7b653437b2fbd\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Tman\.android\build-cache\c0c9473a991a661b9d83db0bf562949d5c06e31f\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Tman\.android\build-cache\7963e46e85f4f94d2deb9184fb586123535b6f6a\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Tman\.android\build-cache\379ebb905e0ece0d2bcd9b7ea99c1875502b9d29\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Tman\.android\build-cache\f724bf4fa4222369f8e5551f33e222281696ee95\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Tman\.android\build-cache\8d2226c9d04ab47b5435cb3329c97a1ac9eb68b2\output\AndroidManifest.xml:21:5-23:58
+MERGED from [io.reactivex.rxjava2:rxandroid:2.0.2] C:\Users\Tman\.android\build-cache\6ca6da4d0eaeb9737a523152fb3c436ac0c334dc\output\AndroidManifest.xml:19:5-43
+MERGED from [com.jakewharton:butterknife:8.4.0] C:\Users\Tman\.android\build-cache\205a16c7c27fea987022fa63341d55149739f766\output\AndroidManifest.xml:5:5-43
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Tman\.android\build-cache\4b4c716a5c8164c9ee70e61e0e5f94f133bc6ac8\output\AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+		INJECTED from D:\androidproject\MyProject\BaiduMap\app\src\main\AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Tman\.android\build-cache\4b4c716a5c8164c9ee70e61e0e5f94f133bc6ac8\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Tman\.android\build-cache\9889a4b471eed07c8bf857afcce5f553bc78086b\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Tman\.android\build-cache\f150342b98c7cb6879dfabc03d56dda2401ac379\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Tman\.android\build-cache\3b213fa247538a9545d75af23eb7b653437b2fbd\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Tman\.android\build-cache\c0c9473a991a661b9d83db0bf562949d5c06e31f\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Tman\.android\build-cache\7963e46e85f4f94d2deb9184fb586123535b6f6a\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Tman\.android\build-cache\379ebb905e0ece0d2bcd9b7ea99c1875502b9d29\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Tman\.android\build-cache\f724bf4fa4222369f8e5551f33e222281696ee95\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Tman\.android\build-cache\8d2226c9d04ab47b5435cb3329c97a1ac9eb68b2\output\AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Tman\.android\build-cache\4b4c716a5c8164c9ee70e61e0e5f94f133bc6ac8\output\AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Tman\.android\build-cache\4b4c716a5c8164c9ee70e61e0e5f94f133bc6ac8\output\AndroidManifest.xml:26:9-47
