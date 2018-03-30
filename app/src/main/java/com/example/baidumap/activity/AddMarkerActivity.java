@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
@@ -38,12 +38,15 @@ import com.example.baidumap.widght.CenterIconView;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AddMarkerActivity extends Activity implements OnMapLoadedCallback, OnGetGeoCoderResultListener, ILBSStorageView {
-    public MapView mMapView = null;
-    public BaiduMap mBaiduMap = null;
+
+    @BindView(R.id.mapView)
+    MapView mMapView;
+    private BaiduMap mBaiduMap;
 
     public LatLng mCenterLatLng;
     private double myCentureLatitude;
@@ -51,10 +54,10 @@ public class AddMarkerActivity extends Activity implements OnMapLoadedCallback, 
     private String myCentureAddress;
 
     // 定位相关
-    public BDLocation currlocation = null; // 存储当前定位信息
+    public BDLocation currlocation; // 存储当前定位信息
     public String mAddress;                //存储当前地址
-    public LocationClient mLocationClient = null;
-    public MyLocationListener listener = new MyLocationListener();
+    public LocationClient mLocationClient;
+    private BDAbstractLocationListener myListener = new MyLocationListener();
     private boolean isFirstIn = true;
 
     private LBSStoragePresenter storagePresenter;
@@ -89,37 +92,9 @@ public class AddMarkerActivity extends Activity implements OnMapLoadedCallback, 
     }
 
     /**
-     * 初始化定位
-     */
-    private void initLocation() {
-        // 实例化百度地图定位核心类
-        mLocationClient = new LocationClient(this);
-        mLocationClient.registerLocationListener(listener);
-
-        // 设置地图参数
-        LocationClientOption option = new LocationClientOption();
-        // 设置坐标系
-        option.setCoorType("bd09ll");
-        // 返回位置信息
-        option.setIsNeedAddress(true);
-        // 启用高精度定位
-        option.setOpenGps(true);
-        // 设置刷新间隔1秒
-        option.setScanSpan(5000);
-        mLocationClient.setLocOption(option);
-
-        // 启动地图定位
-        if (!mLocationClient.isStarted()) {
-            mLocationClient.stop();
-        }
-        mLocationClient.start();
-    }
-
-    /**
      * 初始化地图
      */
     private void initView() {
-        mMapView = (MapView) findViewById(R.id.mapView);
         mBaiduMap = mMapView.getMap();
         UiSettings mUiSettings = mBaiduMap.getUiSettings();
         mUiSettings.setRotateGesturesEnabled(false);//禁用旋转手势
@@ -138,6 +113,11 @@ public class AddMarkerActivity extends Activity implements OnMapLoadedCallback, 
             }
 
             @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+
+            }
+
+            @Override
             public void onMapStatusChangeFinish(MapStatus status) {
                 updateMapState(status);
             }
@@ -148,6 +128,41 @@ public class AddMarkerActivity extends Activity implements OnMapLoadedCallback, 
             }
         });
     }
+
+    /**
+     * 初始化定位
+     */
+    private void initLocation() {
+        mLocationClient = new LocationClient(getApplicationContext());
+        // 设置地图参数
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        // 设置坐标系
+        option.setCoorType("bd09ll");
+        int span = 5000;
+        option.setScanSpan(span);
+        //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);
+        //可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);
+        //可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);
+        //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);
+        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(false);
+        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);
+        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.setEnableSimulateGps(false);
+        //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+
+        mLocationClient.setLocOption(option);
+
+        mLocationClient.registerLocationListener(myListener);
+        mLocationClient.start();
+    }
+
 
     //获取移动后屏幕中间经纬度
     protected void updateMapState(MapStatus status) {
@@ -190,7 +205,7 @@ public class AddMarkerActivity extends Activity implements OnMapLoadedCallback, 
      *
      * @author Administrator
      */
-    public class MyLocationListener implements BDLocationListener {
+    public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
             if (location == null) {
