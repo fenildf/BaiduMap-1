@@ -113,6 +113,9 @@ public class MainActivity extends Activity implements ILBSSearchView {
     //展示路径规划
     private boolean isShowRoutePlan = false;
 
+    //规划点
+    private WalkingRouteOverlay overlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
