@@ -39,6 +39,7 @@ import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.example.baidumap.AppConfig;
@@ -107,6 +108,11 @@ public class MainActivity extends Activity implements ILBSSearchView {
     private LBSSearchPresenter searchPresenter;
     private List<MarkerBean.ContentsBean> dataMarker = new ArrayList<>();
 
+    //在屏幕中间画出图标
+    private CenterIconView centerIconView;
+    //展示路径规划
+    private boolean isShowRoutePlan = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +130,7 @@ public class MainActivity extends Activity implements ILBSSearchView {
 
 
         //在屏幕中间画出图标
-        CenterIconView centerIconView = new CenterIconView(this, mMapView);
+        centerIconView = new CenterIconView(this, mMapView);
         getWindow().addContentView(centerIconView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
@@ -147,8 +153,14 @@ public class MainActivity extends Activity implements ILBSSearchView {
         mBaiduMap.setOnMapTouchListener(new BaiduMap.OnMapTouchListener() {
             @Override
             public void onTouch(MotionEvent arg0) {
-                mMarkerLayout.setVisibility(View.GONE);
-                mBaiduMap.hideInfoWindow();
+                if (isShowRoutePlan) {
+                    isShowRoutePlan = false;
+                    mMarkerLayout.setVisibility(View.GONE);
+                    mBaiduMap.hideInfoWindow();
+                    if (!centerIconView.isShown()) {
+                        centerIconView.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
 
@@ -168,7 +180,14 @@ public class MainActivity extends Activity implements ILBSSearchView {
 
             @Override
             public void onMapStatusChangeFinish(MapStatus status) {
-                updateMapState(status);
+                if (!isShowRoutePlan) {
+                    updateMapState(status);
+                    /*mMarkerLayout.setVisibility(View.GONE);
+                    mBaiduMap.hideInfoWindow();
+                    if (!centerIconView.isShown()) {
+                        centerIconView.setVisibility(View.VISIBLE);
+                    }*/
+                }
             }
 
             @Override
@@ -185,31 +204,34 @@ public class MainActivity extends Activity implements ILBSSearchView {
                 MarkerBean.ContentsBean info;
                 info = (MarkerBean.ContentsBean) extraInfo.getSerializable("info");
 
-                tv_addr.setText(info.getAddress());
+                if (info != null) {
+                    tv_addr.setText(info.getAddress());
 
-                InfoWindow infoWindow;
-                TextView tv = new TextView(context);
-                tv.setBackgroundResource(R.drawable.location_tips);
-                tv.setPadding(30, 20, 30, 50);
-                tv.setText("距离" + info.getDistance() + "米");
-                tv.setTextColor(Color.parseColor("#fff5eb"));
+                    InfoWindow infoWindow;
+                    TextView tv = new TextView(context);
+                    tv.setBackgroundResource(R.drawable.location_tips);
+                    tv.setPadding(30, 20, 30, 50);
+                    tv.setText("距离" + info.getDistance() + "米");
+                    tv.setTextColor(Color.parseColor("#fff5eb"));
 
-                LatLng latLng = marker.getPosition();
-                InfoWindow.OnInfoWindowClickListener listener;
-                listener = new InfoWindow.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick() {
-                        mBaiduMap.hideInfoWindow();
-                    }
-                };
+                    LatLng latLng = marker.getPosition();
+                    InfoWindow.OnInfoWindowClickListener listener;
+                    listener = new InfoWindow.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick() {
+                            mBaiduMap.hideInfoWindow();
+                        }
+                    };
 
-                infoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(tv), latLng, -47, listener);
-                mBaiduMap.showInfoWindow(infoWindow);
-                mMarkerLayout.setVisibility(View.VISIBLE);
+                    infoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(tv), latLng, -47, listener);
+                    mBaiduMap.showInfoWindow(infoWindow);
+                    mMarkerLayout.setVisibility(View.VISIBLE);
 
-                //开始规划路线
-                LatLng startLatLng = new LatLng(mLatitude, mLongitude);
-                planResult(startLatLng, latLng);
+                    //开始规划路线
+                    LatLng startLatLng = new LatLng(mLatitude, mLongitude);
+                    setPlanResult(startLatLng, latLng);
+                }
+
                 return true;
             }
         });
@@ -268,6 +290,16 @@ public class MainActivity extends Activity implements ILBSSearchView {
         searchPresenter.getSearch(AppConfig.AK, AppConfig.GEOTABLE_ID, "9999", AppConfig.RADIUS, location);
     }
 
+    @Override
+    public void showSearch(MarkerBean bean) {
+        if (bean.getStatus() == 0) {
+            dataMarker = bean.getContents();
+            addOverlays(dataMarker);
+        } else {
+            ToastUtils.showToast(this, "请求错误");
+        }
+    }
+
     //添加覆盖物
     private void addOverlays(List<MarkerBean.ContentsBean> list) {
         mBaiduMap.clear();
@@ -286,16 +318,6 @@ public class MainActivity extends Activity implements ILBSSearchView {
     }
 
 
-    @Override
-    public void showSearch(MarkerBean bean) {
-        if (bean.getStatus() == 0) {
-            dataMarker = bean.getContents();
-            addOverlays(dataMarker);
-        } else {
-            ToastUtils.showToast(this, "请求错误");
-        }
-    }
-
     //获取移动后屏幕中间经纬度
     protected void updateMapState(MapStatus status) {
         LatLng mCenterLatLng = status.target;
@@ -307,7 +329,7 @@ public class MainActivity extends Activity implements ILBSSearchView {
     }
 
     //规划步行路线
-    private void planResult(LatLng stLatLng, LatLng enLatLng) {
+    private void setPlanResult(LatLng stLatLng, LatLng enLatLng) {
         PlanNode stNode = PlanNode.withLocation(stLatLng);
         PlanNode enNode = PlanNode.withLocation(enLatLng);
         mSearch.walkingSearch((new WalkingRoutePlanOption())
@@ -331,7 +353,7 @@ public class MainActivity extends Activity implements ILBSSearchView {
 
             // 封装数据
             MyLocationData data = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
+                    .accuracy(0)
                     .direction(mCurrentX)
                     .latitude(location.getLatitude())
                     .longitude(location.getLongitude())
@@ -363,19 +385,32 @@ public class MainActivity extends Activity implements ILBSSearchView {
     }
 
     /**
-     * 步行路线规划
+     * 步行路线规划监听
      */
     private OnGetRoutePlanResultListener routePlanlistener = new OnGetRoutePlanResultListener() {
 
         public void onGetWalkingRouteResult(WalkingRouteResult result) {
             //获取步行线路规划结果
-            if (result.getRouteLines().size() == 1) {
+            if (result.getRouteLines().size() == 1 && !isShowRoutePlan) {
+                centerIconView.setVisibility(View.GONE);
+                isShowRoutePlan = true;
+
+                List<WalkingRouteLine> routeLines = result.getRouteLines();
+                int allDistances = 0;//总距离/米
+                int allDurations = 0;//总时长/秒
+                if (routeLines != null) {
+                    for (WalkingRouteLine drivingRouteLine : routeLines) {
+                        allDistances = allDistances + drivingRouteLine.getDistance();
+                        allDurations = allDurations + drivingRouteLine.getDuration();
+                    }
+                }
+
                 WalkingRouteOverlay overlay = new MyWalkingRouteOverlay(mBaiduMap);
                 mBaiduMap.setOnMarkerClickListener(overlay);
                 routeOverlay = overlay;
-                overlay.setData(result.getRouteLines().get(0));
-                overlay.addToMap();
-                overlay.zoomToSpan();
+                overlay.setData(result.getRouteLines().get(0));//设置路线数据
+                overlay.addToMap();//将所有overlay添加到地图中
+                overlay.zoomToSpan();//缩放地图
             }
         }
 

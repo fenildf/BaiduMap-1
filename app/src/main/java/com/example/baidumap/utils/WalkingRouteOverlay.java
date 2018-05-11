@@ -52,28 +52,29 @@ public class WalkingRouteOverlay extends OverlayManager {
             for (WalkingRouteLine.WalkingStep step : mRouteLine.getAllStep()) {
                 Bundle b = new Bundle();
                 b.putInt("index", mRouteLine.getAllStep().indexOf(step));
-                if (step.getEntrance() != null) {
-                    overlayList.add((new MarkerOptions())
-                            .position(step.getEntrance().getLocation())
-                                    .rotate((360 - step.getDirection()))
-                                            .zIndex(10)
-                                                    .anchor(0.5f, 0.5f)
-                                                            .extraInfo(b)
-                                                                    .icon(BitmapDescriptorFactory
-                                                                            .fromAssetWithDpi("Icon_line_node.png")));
-                }
+                //中间点
+//                if (step.getEntrance() != null) {
+//                    overlayList.add((new MarkerOptions())
+//                            .position(step.getEntrance().getLocation())
+//                                    .rotate((360 - step.getDirection()))
+//                                            .zIndex(10)
+//                                                    .anchor(0.5f, 0.5f)
+//                                                            .extraInfo(b)
+//                                                                    .icon(BitmapDescriptorFactory
+//                                                                            .fromAssetWithDpi("Icon_line_node.png")));
+//                }
 
                 // 最后路段绘制出口点
-                if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine
-                        .getAllStep().size() - 1) && step.getExit() != null) {
-                    overlayList.add((new MarkerOptions())
-                            .position(step.getExit().getLocation())
-                                    .anchor(0.5f, 0.5f)
-                                            .zIndex(10)
-                                                    .icon(BitmapDescriptorFactory
-                                                            .fromAssetWithDpi("Icon_line_node.png")));
-
-                }
+//                if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine
+//                        .getAllStep().size() - 1) && step.getExit() != null) {
+//                    overlayList.add((new MarkerOptions())
+//                            .position(step.getExit().getLocation())
+//                                    .anchor(0.5f, 0.5f)
+//                                            .zIndex(10)
+//                                                    .icon(BitmapDescriptorFactory
+//                                                            .fromAssetWithDpi("Icon_line_node.png")));
+//
+//                }
             }
         }
         // starting

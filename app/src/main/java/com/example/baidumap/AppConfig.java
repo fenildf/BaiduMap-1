@@ -14,7 +14,7 @@ public class AppConfig {
     public static final String GEOTABLE_ID = "133284";
 
     //周边范围
-    public static final String RADIUS = "400";
+    public static final String RADIUS = "300";
 
     //3代表百度经纬度坐标系统 4代表百度墨卡托系统
     public static final String COORD_TYPE = "3";

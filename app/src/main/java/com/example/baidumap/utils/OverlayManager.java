@@ -109,8 +109,8 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
                     builder.include(((Marker) overlay).getPosition());
                 }
             }
-            mBaiduMap.setMapStatus(MapStatusUpdateFactory
-                    .newLatLngBounds(builder.build()));
+//            mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLngBounds(builder.build()));
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newLatLngBounds(builder.build()));
         }
     }
 
