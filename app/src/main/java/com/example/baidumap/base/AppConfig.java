@@ -1,4 +1,4 @@
-package com.example.baidumap;
+package com.example.baidumap.base;
 
 /**
  * Created by wangt on 2018/3/27.

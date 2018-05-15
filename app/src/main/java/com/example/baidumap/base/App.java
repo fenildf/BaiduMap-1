@@ -1,4 +1,4 @@
-package com.example.baidumap;
+package com.example.baidumap.base;
 
 import android.app.Application;
 

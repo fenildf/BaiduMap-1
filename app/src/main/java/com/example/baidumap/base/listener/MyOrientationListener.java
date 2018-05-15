@@ -1,4 +1,4 @@
-package com.example.baidumap.listener;
+package com.example.baidumap.base.listener;
 
 import android.content.Context;
 import android.hardware.Sensor;

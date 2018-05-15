@@ -11,7 +11,7 @@ package com.example.baidumap.utils;
 
 import android.util.Log;
 
-import com.example.baidumap.AppConfig;
+import com.example.baidumap.base.AppConfig;
 
 import java.util.concurrent.TimeUnit;
 

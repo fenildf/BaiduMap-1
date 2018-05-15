@@ -26,7 +26,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.example.baidumap.AppConfig;
+import com.example.baidumap.base.AppConfig;
 import com.example.baidumap.R;
 import com.example.baidumap.bean.StorageBean;
 import com.example.baidumap.mvp.model.LBSModel;

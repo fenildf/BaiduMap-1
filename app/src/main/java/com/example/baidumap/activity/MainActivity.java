@@ -42,11 +42,11 @@ import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
-import com.example.baidumap.AppConfig;
+import com.example.baidumap.base.AppConfig;
 import com.example.baidumap.R;
 import com.example.baidumap.bean.MarkerBean;
-import com.example.baidumap.listener.MyOrientationListener;
-import com.example.baidumap.listener.MyOrientationListener.OnOrientationListener;
+import com.example.baidumap.base.listener.MyOrientationListener;
+import com.example.baidumap.base.listener.MyOrientationListener.OnOrientationListener;
 import com.example.baidumap.mvp.model.LBSModel;
 import com.example.baidumap.mvp.presenter.LBSSearchPresenter;
 import com.example.baidumap.mvp.view.ILBSSearchView;
@@ -135,6 +135,36 @@ public class MainActivity extends Activity implements ILBSSearchView {
         //在屏幕中间画出图标
         centerIconView = new CenterIconView(this, mMapView);
         getWindow().addContentView(centerIconView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 开启定位
+        mBaiduMap.setMyLocationEnabled(true);
+        if (!mLocationClient.isStarted()) {
+            mLocationClient.start();
+        }
+        // 开启方向传感器
+        myOrientationListener.start();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ApiGetInfo(currlocation.getLongitude(), currlocation.getLatitude());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
     }
 
     /**
@@ -515,36 +545,6 @@ public class MainActivity extends Activity implements ILBSSearchView {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 开启定位
-        mBaiduMap.setMyLocationEnabled(true);
-        if (!mLocationClient.isStarted()) {
-            mLocationClient.start();
-        }
-        // 开启方向传感器
-        myOrientationListener.start();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        ApiGetInfo(currlocation.getLongitude(), currlocation.getLatitude());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMapView.onPause();
     }
 
     @Override
